@@ -91,6 +91,7 @@ class DatasetLocal(Resource):
                 first = False
             else:
                 unique_id = str(row)
+                print(unique_id)
                 row = [unique_id] + row
                 try:
                     cursor.execute('INSERT INTO data(trip_id, trip_duration, start_time, stop_time,    start_station_id, \
