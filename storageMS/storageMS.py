@@ -46,7 +46,7 @@ class Dataset(Resource):
             if first:
                 first = False
             else:
-                unique_id = str(hash(str(row)))
+                unique_id = str(row)
                 row = [unique_id] + row
 
                 try:
@@ -90,7 +90,7 @@ class DatasetLocal(Resource):
             if first:
                 first = False
             else:
-                unique_id = str(hash(str(row)))
+                unique_id = str(row)
                 row = [unique_id] + row
                 try:
                     cursor.execute('INSERT INTO data(trip_id, trip_duration, start_time, stop_time,    start_station_id, \
