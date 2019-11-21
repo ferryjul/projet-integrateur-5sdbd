@@ -1,0 +1,18 @@
+CREATE TABLE data
+(
+	trip_duration INT,
+	start_time DATETIME,
+	stop_time DATETIME,
+	start_station_id INT,
+	start_station_name VARCHAR(100),
+	start_station_latitude FLOAT,
+	start_station_longitude FLOAT,
+	end_station_id INT,
+	end_station_name VARCHAR(100),
+	end_station_latitude FLOAT,
+	end_station_longitude FLOAT,
+	bike_id INT,
+	user_type INT,
+	birth_year DATE,
+	gender INT
+)
