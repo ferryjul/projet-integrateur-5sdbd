@@ -13,7 +13,7 @@ db_connect = create_engine('sqlite:///chinook.db')
 app = Flask(__name__)
 api = Api(app)
 table_name = 'data'
-column_names = '(tripduration, starttime, stoptime, start_station_id, \
+column_names = '(trip_id, tripduration, starttime, stoptime, start_station_id, \
                 start_station_name, start_station_latitude, start_station_longitude, \
                 end_station_id, end_station_name, end_station_latitude, end_station_longitude, \
                 bikeid, usertype, birth_year, gender)'
@@ -47,15 +47,16 @@ class Dataset(Resource):
                 first = False
             else:
                 unique_id = hash(str(row))
-                
-                cursor.execute('INSERT INTO data(trip_duration, start_time, stop_time,    start_station_id, \
+                row = [unique_id] + row
+
+                cursor.execute('INSERT INTO data(trip_id, trip_duration, start_time, stop_time,    start_station_id, \
                 start_station_name, start_station_latitude, start_station_longitude, \
                 end_station_id, end_station_name, end_station_latitude, end_station_longitude, \
                 bike_id, user_type, birth_year, gender )' \
                 'VALUES(%s, %s, %s, %s, %s, \
                 %s, %s, %s, \
                 %s, %s, %s, %s, \
-                %s, %s, %s, %s)', unique_id, row)
+                %s, %s, %s, %s)', row)
         # Close BDD
         print("Closing BDD")
         mydb.commit()
@@ -87,15 +88,16 @@ class DatasetLocal(Resource):
                 first = False
             else:
                 unique_id = hash(str(row))
+                row = [unique_id] + row
 
-                cursor.execute('INSERT INTO data(trip_duration, start_time, stop_time,    start_station_id, \
+                cursor.execute('INSERT INTO data(trip_id, trip_duration, start_time, stop_time,    start_station_id, \
                 start_station_name, start_station_latitude, start_station_longitude, \
                 end_station_id, end_station_name, end_station_latitude, end_station_longitude, \
                 bike_id, user_type, birth_year, gender )' \
                 'VALUES(%s, %s, %s, %s, %s, \
                 %s, %s, %s, \
                 %s, %s, %s, %s, \
-                %s, %s, %s, %s)', unique_id, row)
+                %s, %s, %s, %s)', row)
         # Close BDD
         print("Closing BDD")
         mydb.commit()
