@@ -79,6 +79,7 @@ class DatasetLocal(Resource):
         csv_data = csv.reader(open("/home/user/tests/JC-201509-citibike-tripdata.csv"))
         first = True
         for row in csv_data:
+            unique_id = int(row[0]*row[5]*row[11])
             # Allow blank cells
             for i in range(len(row)):
                 if row[i] == '':
@@ -90,10 +91,10 @@ class DatasetLocal(Resource):
                 start_station_name, start_station_latitude, start_station_longitude, \
                 end_station_id, end_station_name, end_station_latitude, end_station_longitude, \
                 bike_id, user_type, birth_year, gender )' \
-                'VALUES(%s, %s, %s, %s, \
+                'VALUES(%s, %s, %s, %s, %s, \
                 %s, %s, %s, \
                 %s, %s, %s, %s, \
-                %s, %s, %s, %s)', row)
+                %s, %s, %s, %s)', unique_id, row)
         # Close BDD
         print("Closing BDD")
         mydb.commit()
