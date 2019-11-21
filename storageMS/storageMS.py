@@ -103,6 +103,7 @@ class DatasetLocal(Resource):
                     %s, %s, %s, %s, \
                     %s, %s, %s, %s)', row)
                 except:
+                    print("error")
                     pass;
         # Close BDD
         print("Closing BDD")
