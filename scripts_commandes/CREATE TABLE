@@ -1,5 +1,10 @@
+DROP DATABASE mydb;
+CREATE DATABASE mydb;
+USE mydb;
+
 CREATE TABLE data
 (
+	trip_id INT,
 	trip_duration INT,
 	start_time DATETIME,
 	stop_time DATETIME,
@@ -12,7 +17,8 @@ CREATE TABLE data
 	end_station_latitude FLOAT,
 	end_station_longitude FLOAT,
 	bike_id INT,
-	user_type INT,
-	birth_year DATE,
-	gender INT
-)
+	user_type VARCHAR(100),
+	birth_year INT,
+	gender INT,
+	UNIQUE(trip_id)
+);
