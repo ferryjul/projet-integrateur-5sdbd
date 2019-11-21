@@ -8,6 +8,7 @@ import csv
 import requests
 import os
 import shutil
+import hashlib
 
 db_connect = create_engine('sqlite:///chinook.db')
 app = Flask(__name__)
@@ -46,7 +47,7 @@ class Dataset(Resource):
             if first:
                 first = False
             else:
-                unique_id = str(row)
+                uunique_id = str(hashlib.md5(str(row).encode()).hexdigest())
                 row = [unique_id] + row
 
                 try:
@@ -90,8 +91,7 @@ class DatasetLocal(Resource):
             if first:
                 first = False
             else:
-                unique_id = str(row)
-                print(unique_id)
+                unique_id = str(hashlib.md5(str(row).encode()).hexdigest())
                 row = [unique_id] + row
                 try:
                     cursor.execute('INSERT INTO data(trip_id, trip_duration, start_time, stop_time,    start_station_id, \
@@ -103,7 +103,6 @@ class DatasetLocal(Resource):
                     %s, %s, %s, %s, \
                     %s, %s, %s, %s)', row)
                 except:
-                    print("error")
                     pass;
         # Close BDD
         print("Closing BDD")
