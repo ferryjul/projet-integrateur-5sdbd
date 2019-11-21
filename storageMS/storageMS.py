@@ -18,15 +18,52 @@ column_names = '(trip_id, tripduration, starttime, stoptime, start_station_id, \
                 start_station_name, start_station_latitude, start_station_longitude, \
                 end_station_id, end_station_name, end_station_latitude, end_station_longitude, \
                 bikeid, usertype, birth_year, gender)'
+
+
+def update_table(addr):
+    # Open BDD
+    print("Opening BDD")
+    mydb = MySQLdb.connect(host='localhost',
+        user='root',
+        passwd='useruser',
+        db='mydb')
+    cursor = mydb.cursor()
+
+    # Load csv in database
+    print("Loading dataset")
+    csv_data = csv.reader(open(addr))
+    first = True
+    for row in csv_data:
+        # Allow blank cells
+        for i in range(len(row)):
+            if row[i] == '':
+                row[i] = None
+        if first:
+            first = False
+        else:
+            uunique_id = str(hashlib.md5(str(row).encode()).hexdigest())
+            row = [unique_id] + row
+
+            try:
+                cursor.execute('INSERT INTO data(trip_id, trip_duration, start_time, stop_time,    start_station_id, \
+                start_station_name, start_station_latitude, start_station_longitude, \
+                end_station_id, end_station_name, end_station_latitude, end_station_longitude, \
+                bike_id, user_type, birth_year, gender )' \
+                'VALUES(%s, %s, %s, %s, %s, \
+                %s, %s, %s, \
+                %s, %s, %s, %s, \
+                %s, %s, %s, %s)', row)
+            except:
+                pass;
+    # Close BDD
+    print("Closing BDD")
+    mydb.commit()
+    cursor.close()
+
+
+
 class Dataset(Resource):
     def get(self, dataset_address):
-        # Open BDD
-        print("Opening BDD")
-        mydb = MySQLdb.connect(host='localhost',
-            user='root',
-            passwd='useruser',
-            db='mydb')
-        cursor = mydb.cursor()
         # Download and save file
         print("Downloading file")
         file = requests.get(dataset_address, stream=True)
@@ -35,36 +72,10 @@ class Dataset(Resource):
         with open("file_tmp.csv", 'wb') as location:
             shutil.copyfileobj(dump, location)
         del dump
-        # Load csv in database
-        print("Loading dataset")
-        csv_data = csv.reader(open("/home/user/tests/JC-201509-citibike-tripdata.csv"))
-        first = True
-        for row in csv_data:
-            # Allow blank cells
-            for i in range(len(row)):
-                if row[i] == '':
-                    row[i] = None
-            if first:
-                first = False
-            else:
-                uunique_id = str(hashlib.md5(str(row).encode()).hexdigest())
-                row = [unique_id] + row
+        
+        #Call update_table fct
+        update_table(location)
 
-                try:
-                    cursor.execute('INSERT INTO data(trip_id, trip_duration, start_time, stop_time,    start_station_id, \
-                    start_station_name, start_station_latitude, start_station_longitude, \
-                    end_station_id, end_station_name, end_station_latitude, end_station_longitude, \
-                    bike_id, user_type, birth_year, gender )' \
-                    'VALUES(%s, %s, %s, %s, %s, \
-                    %s, %s, %s, \
-                    %s, %s, %s, %s, \
-                    %s, %s, %s, %s)', row)
-                except:
-                    pass;
-        # Close BDD
-        print("Closing BDD")
-        mydb.commit()
-        cursor.close()
         # Delete temporary file
         print("Deleting temporary files")
         os.remove('file_tmp.csv')
@@ -72,43 +83,8 @@ class Dataset(Resource):
 
 class DatasetLocal(Resource):
     def get(self, dataset_address):
-        print(dataset_address)
-        # Open BDD
-        print("Opening BDD")
-        mydb = MySQLdb.connect(host='localhost',
-            user='root',
-            passwd='useruser',
-            db='mydb')
-        cursor = mydb.cursor()
-        # Load csv in database
-        print("Loading dataset")
-        csv_data = csv.reader(open("/home/user/tests/JC-201509-citibike-tripdata.csv"))
-        first = True
-        for row in csv_data:
-            # Allow blank cells
-            for i in range(len(row)):
-                if row[i] == '':
-                    row[i] = None
-            if first:
-                first = False
-            else:
-                unique_id = str(hashlib.md5(str(row).encode()).hexdigest())
-                row = [unique_id] + row
-                try:
-                    cursor.execute('INSERT INTO data(trip_id, trip_duration, start_time, stop_time,    start_station_id, \
-                    start_station_name, start_station_latitude, start_station_longitude, \
-                    end_station_id, end_station_name, end_station_latitude, end_station_longitude, \
-                    bike_id, user_type, birth_year, gender )' \
-                    'VALUES(%s, %s, %s, %s, %s, \
-                    %s, %s, %s, \
-                    %s, %s, %s, %s, \
-                    %s, %s, %s, %s)', row)
-                except:
-                    pass;
-        # Close BDD
-        print("Closing BDD")
-        mydb.commit()
-        cursor.close()
+        #Call update_table fct
+        update_table(dataset_address["src"])
         return "Done"
 
 # Give URL to dataset
