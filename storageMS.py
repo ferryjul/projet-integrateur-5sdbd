@@ -12,7 +12,11 @@ import shutil
 db_connect = create_engine('sqlite:///chinook.db')
 app = Flask(__name__)
 api = Api(app)
-
+table_name = 'data'
+column_names = '(tripduration, starttime, stoptime, start_station_id, \
+                start_station_name, start_station_latitude, start_station_longitude, \
+                end_station_id, end_station_name, end_station_latitude, end_station_longitude, \
+                bikeid, usertype, birth_year, gender)'
 class Dataset(Resource):
     def get(self, dataset_address):
         # Open BDD
@@ -31,11 +35,13 @@ class Dataset(Resource):
         # Load csv in database
         csv_data = csv.reader(file('file_tmp.csv'))
         for row in csv_data:
-            cursor.execute('INSERT INTO testcsv(names, \
-                classes, mark )' \
-                'VALUES("%s", "%s", "%s")', 
-                row)
+            cursor.execute('INSERT INTO ' + table_name + column_names \
+                'VALUES(%s, %s, %s, %s, \
+                %s, %s, %s, \
+                %s, %s, %s, %s, \
+                %s, %s, %s, %s)', row)
         # Close BDD
+        mydb.commit()
         cursor.close()
         # Delete temporary file
         os.remove('file_tmp.csv')
@@ -52,11 +58,12 @@ class DatasetLocal(Resource):
         # Load csv in database
         csv_data = csv.reader(file(dataset_address))
         for row in csv_data:
-            cursor.execute('INSERT INTO testcsv(names, \
+            cursor.execute('INSERT INTO ' + table_name + '(names, \
                 classes, mark )' \
                 'VALUES("%s", "%s", "%s")', 
                 row)
         # Close BDD
+        mydb.commit()
         cursor.close()
         return "Done"
 
