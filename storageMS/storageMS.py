@@ -22,12 +22,21 @@ mydb = None
 cursor = None
 
 def open_db():
+    global host
+    global user
+    global passwd
+    global db
+    global mydb
+    global cursor
+
     # Open BDD
     print("Opening BDD")
     mydb = MySQLdb.connect(host, user, passwd, db)
     cursor = mydb.cursor()
 
 def close_db():
+    global mydb
+    global cursor
     # Close BDD
     print("Closing BDD")
     mydb.commit()
