@@ -22,3 +22,5 @@ CREATE TABLE data
 	gender INT,
 	UNIQUE(trip_id)
 );
+
+SELECT COUNT(*) FROM data;

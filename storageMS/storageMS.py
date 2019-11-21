@@ -39,8 +39,6 @@ class Dataset(Resource):
         csv_data = csv.reader(open("/home/user/tests/JC-201509-citibike-tripdata.csv"))
         first = True
         for row in csv_data:
-            unique_id = int(row[0]*row[5]*row[11])
-
             # Allow blank cells
             for i in range(len(row)):
                 if row[i] == '':
@@ -48,6 +46,7 @@ class Dataset(Resource):
             if first:
                 first = False
             else:
+                unique_id = int(row[0]*row[5]*row[11])
                 cursor.execute('INSERT INTO data(trip_duration, start_time, stop_time,    start_station_id, \
                 start_station_name, start_station_latitude, start_station_longitude, \
                 end_station_id, end_station_name, end_station_latitude, end_station_longitude, \
@@ -79,7 +78,6 @@ class DatasetLocal(Resource):
         csv_data = csv.reader(open("/home/user/tests/JC-201509-citibike-tripdata.csv"))
         first = True
         for row in csv_data:
-            unique_id = int(row[0]*row[5]*row[11])
             # Allow blank cells
             for i in range(len(row)):
                 if row[i] == '':
@@ -87,6 +85,8 @@ class DatasetLocal(Resource):
             if first:
                 first = False
             else:
+                unique_id = int(row[0]*row[5]*row[11])
+
                 cursor.execute('INSERT INTO data(trip_duration, start_time, stop_time,    start_station_id, \
                 start_station_name, start_station_latitude, start_station_longitude, \
                 end_station_id, end_station_name, end_station_latitude, end_station_longitude, \
