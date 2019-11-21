@@ -72,6 +72,8 @@ class Dataset(Resource):
 
 class DatasetLocal(Resource):
     def get(self, dataset_address):
+        print(request.form['src'])
+        break
         # Open BDD
         print("Opening BDD")
         mydb = MySQLdb.connect(host='localhost',
@@ -111,10 +113,10 @@ class DatasetLocal(Resource):
         return "Done"
 
 # Give URL to dataset
-api.add_resource(Dataset, '/add-distant-dataset/<dataset_address>') # Route_1
+api.add_resource(Dataset, '/add-distant-dataset') # Route_1
 
 # Give absolute path to dataset
-api.add_resource(DatasetLocal, '/add-local-dataset/<dataset_address>') # Route_2
+api.add_resource(DatasetLocal, '/add-local-dataset') # Route_2
 
 
 
