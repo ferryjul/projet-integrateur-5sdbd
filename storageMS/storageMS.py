@@ -49,14 +49,15 @@ class Dataset(Resource):
                 unique_id = str(hash(str(row)))
                 row = [unique_id] + row
 
-                cursor.execute('INSERT INTO data(trip_id, trip_duration, start_time, stop_time,    start_station_id, \
-                start_station_name, start_station_latitude, start_station_longitude, \
-                end_station_id, end_station_name, end_station_latitude, end_station_longitude, \
-                bike_id, user_type, birth_year, gender )' \
-                'VALUES(%s, %s, %s, %s, %s, \
-                %s, %s, %s, \
-                %s, %s, %s, %s, \
-                %s, %s, %s, %s)', row)
+                try:
+                    cursor.execute('INSERT INTO data(trip_id, trip_duration, start_time, stop_time,    start_station_id, \
+                    start_station_name, start_station_latitude, start_station_longitude, \
+                    end_station_id, end_station_name, end_station_latitude, end_station_longitude, \
+                    bike_id, user_type, birth_year, gender )' \
+                    'VALUES(%s, %s, %s, %s, %s, \
+                    %s, %s, %s, \
+                    %s, %s, %s, %s, \
+                    %s, %s, %s, %s)', row)
         # Close BDD
         print("Closing BDD")
         mydb.commit()
@@ -89,15 +90,15 @@ class DatasetLocal(Resource):
             else:
                 unique_id = str(hash(str(row)))
                 row = [unique_id] + row
-
-                cursor.execute('INSERT INTO data(trip_id, trip_duration, start_time, stop_time,    start_station_id, \
-                start_station_name, start_station_latitude, start_station_longitude, \
-                end_station_id, end_station_name, end_station_latitude, end_station_longitude, \
-                bike_id, user_type, birth_year, gender )' \
-                'VALUES(%s, %s, %s, %s, %s, \
-                %s, %s, %s, \
-                %s, %s, %s, %s, \
-                %s, %s, %s, %s)', row)
+                try:
+                    cursor.execute('INSERT INTO data(trip_id, trip_duration, start_time, stop_time,    start_station_id, \
+                    start_station_name, start_station_latitude, start_station_longitude, \
+                    end_station_id, end_station_name, end_station_latitude, end_station_longitude, \
+                    bike_id, user_type, birth_year, gender )' \
+                    'VALUES(%s, %s, %s, %s, %s, \
+                    %s, %s, %s, \
+                    %s, %s, %s, %s, \
+                    %s, %s, %s, %s)', row)
         # Close BDD
         print("Closing BDD")
         mydb.commit()

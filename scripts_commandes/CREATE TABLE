@@ -4,7 +4,7 @@ USE mydb;
 
 CREATE TABLE data
 (
-	trip_id INT,
+	trip_id VARCHAR(100),
 	trip_duration INT,
 	start_time DATETIME,
 	stop_time DATETIME,
