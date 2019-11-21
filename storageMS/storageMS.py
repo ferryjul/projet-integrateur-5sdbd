@@ -83,15 +83,16 @@ class Dataset(Resource):
 
 class DatasetLocal(Resource):
     def get(self, dataset_address):
+        print(dataset_address)
         #Call update_table fct
         update_table(dataset_address["src"])
         return "Done"
 
 # Give URL to dataset
-api.add_resource(Dataset, '/add-distant-dataset/<dataset_address>') # Route_1
+api.add_resource(Dataset, '/add-distant-dataset/<path:dataset_address>') # Route_1
 
 # Give absolute path to dataset
-api.add_resource(DatasetLocal, '/add-local-dataset/<dataset_address>') # Route_2
+api.add_resource(DatasetLocal, '/add-local-dataset/<path:dataset_address>') # Route_2
 
 
 

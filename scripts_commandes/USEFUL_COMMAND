@@ -1,2 +1,2 @@
 sudo python3 storageMS.py
-192.168.37.87/add-local-dataset/{"src":"/home/user/tests/JC-201509-citibike-tripdata.csv"}
+192.168.37.87/add-local-dataset/{"src":"\/home\/user\/tests\/JC-201509-citibike-tripdata.csv"}
