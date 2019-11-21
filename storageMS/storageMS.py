@@ -100,14 +100,14 @@ class DatasetLocal(Resource):
         update_table(dataset_address[1:-1])
         return "Done"
 
-class ExecSQLReq(Resource):
-    def get(self, sql_req):
+class ExecSQLQuery(Resource):
+    def get(self, sql_query):
         #Execute the request on the table
         open_db()
         result = None
 
         try:
-                cursor.execute(sql_req[1:-1])
+                cursor.execute(sql_query[1:-1])
                 result = cursor.fetchall()
         except:
             close_db()
@@ -119,13 +119,13 @@ class ExecSQLReq(Resource):
 
 
 # Give URL to dataset
-api.add_resource(Dataset, '/add-distant-dataset/<path:dataset_address>') # Route_1
+api.add_resource(Dataset, '/add-distant-dataset/<path:dataset_address>')
 
 # Give absolute path to dataset
-api.add_resource(DatasetLocal, '/add-local-dataset/<path:dataset_address>') # Route_2
+api.add_resource(DatasetLocal, '/add-local-dataset/<path:dataset_address>')
 
 # Give SQL request to execute on the database
-api.add_resource(ExecSQLReq, '/sql-request/<path:sql_req>') # Route_2
+api.add_resource(ExecSQLQuery, '/sql-query/<path:sql_query>')
 
 
 
