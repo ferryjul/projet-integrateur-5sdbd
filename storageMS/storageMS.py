@@ -41,7 +41,7 @@ def update_table(addr):
         if first:
             first = False
         else:
-            uunique_id = str(hashlib.md5(str(row).encode()).hexdigest())
+            unique_id = str(hashlib.md5(str(row).encode()).hexdigest())
             row = [unique_id] + row
 
             try:
