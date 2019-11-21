@@ -10,25 +10,31 @@ import os
 import shutil
 import hashlib
 
-db_connect = create_engine('sqlite:///chinook.db')
 app = Flask(__name__)
 api = Api(app)
-table_name = 'data'
-column_names = '(trip_id, tripduration, starttime, stoptime, start_station_id, \
-                start_station_name, start_station_latitude, start_station_longitude, \
-                end_station_id, end_station_name, end_station_latitude, end_station_longitude, \
-                bikeid, usertype, birth_year, gender)'
 
+host='localhost',
+user='root',
+passwd='useruser',
+db='mydb'
 
-def update_table(addr):
+mydb = None
+cursor = None
+
+def open_db():
     # Open BDD
     print("Opening BDD")
-    mydb = MySQLdb.connect(host='localhost',
-        user='root',
-        passwd='useruser',
-        db='mydb')
+    mydb = MySQLdb.connect(host, user, passwd, db)
     cursor = mydb.cursor()
 
+def close_db():
+    # Close BDD
+    print("Closing BDD")
+    mydb.commit()
+    cursor.close()
+
+def update_table(addr):
+    open_db()
     # Load csv in database
     print("Loading dataset")
     csv_data = csv.reader(open(addr))
@@ -55,10 +61,8 @@ def update_table(addr):
                 %s, %s, %s, %s)', row)
             except:
                 pass;
-    # Close BDD
-    print("Closing BDD")
-    mydb.commit()
-    cursor.close()
+    close_db()
+
 
 
 
@@ -87,11 +91,32 @@ class DatasetLocal(Resource):
         update_table(dataset_address[1:-1])
         return "Done"
 
+class ExecSQLReq(Resource):
+    def get(self, sql_req):
+        #Execute the request on the table
+        open_db()
+        result = None
+
+        try:
+                cursor.execute(sql_req[1:-1])
+                result = cursor.fetchall()
+        except:
+            close_db()
+            return "Request failed: check you syntax"
+
+        close_db()
+        return jsonify(result)
+
+
+
 # Give URL to dataset
 api.add_resource(Dataset, '/add-distant-dataset/<path:dataset_address>') # Route_1
 
 # Give absolute path to dataset
 api.add_resource(DatasetLocal, '/add-local-dataset/<path:dataset_address>') # Route_2
+
+# Give SQL request to execute on the database
+api.add_resource(ExecSQLReq, '/sql-request/<path:sql_req>') # Route_2
 
 
 
