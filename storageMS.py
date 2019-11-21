@@ -58,10 +58,11 @@ class DatasetLocal(Resource):
         # Load csv in database
         csv_data = csv.reader(file(dataset_address))
         for row in csv_data:
-            cursor.execute('INSERT INTO ' + table_name + '(names, \
-                classes, mark )' \
-                'VALUES("%s", "%s", "%s")', 
-                row)
+            cursor.execute('INSERT INTO ' + table_name + column_names \
+                'VALUES(%s, %s, %s, %s, \
+                %s, %s, %s, \
+                %s, %s, %s, %s, \
+                %s, %s, %s, %s)', row)
         # Close BDD
         mydb.commit()
         cursor.close()
