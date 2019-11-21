@@ -46,7 +46,8 @@ class Dataset(Resource):
             if first:
                 first = False
             else:
-                unique_id = int(row[0]*row[5]*row[11])
+                unique_id = hash(str(row))
+                
                 cursor.execute('INSERT INTO data(trip_duration, start_time, stop_time,    start_station_id, \
                 start_station_name, start_station_latitude, start_station_longitude, \
                 end_station_id, end_station_name, end_station_latitude, end_station_longitude, \
@@ -85,7 +86,7 @@ class DatasetLocal(Resource):
             if first:
                 first = False
             else:
-                unique_id = int(row[0]*row[5]*row[11])
+                unique_id = hash(str(row))
 
                 cursor.execute('INSERT INTO data(trip_duration, start_time, stop_time,    start_station_id, \
                 start_station_name, start_station_latitude, start_station_longitude, \
