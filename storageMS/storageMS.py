@@ -73,7 +73,6 @@ class Dataset(Resource):
 class DatasetLocal(Resource):
     def get(self, dataset_address):
         print(request.form['src'])
-        break
         # Open BDD
         print("Opening BDD")
         mydb = MySQLdb.connect(host='localhost',
