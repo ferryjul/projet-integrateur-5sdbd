@@ -101,6 +101,8 @@ class DatasetLocal(Resource):
                     %s, %s, %s, \
                     %s, %s, %s, %s, \
                     %s, %s, %s, %s)', row)
+                except:
+                    pass;
         # Close BDD
         print("Closing BDD")
         mydb.commit()
