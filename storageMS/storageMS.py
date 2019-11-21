@@ -13,9 +13,9 @@ import hashlib
 app = Flask(__name__)
 api = Api(app)
 
-host='localhost',
-user='root',
-passwd='useruser',
+host='localhost'
+user='root'
+passwd='useruser'
 db='mydb'
 
 mydb = None
