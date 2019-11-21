@@ -66,7 +66,7 @@ class Dataset(Resource):
     def get(self, dataset_address):
         # Download and save file
         print("Downloading file")
-        file = requests.get(dataset_address, stream=True)
+        file = requests.get(dataset_address[1:-1], stream=True)
         dump = file.raw
         location = os.path.relpath("./")
         with open("file_tmp.csv", 'wb') as location:
@@ -83,9 +83,8 @@ class Dataset(Resource):
 
 class DatasetLocal(Resource):
     def get(self, dataset_address):
-        print(dataset_address)
         #Call update_table fct
-        update_table(dataset_address["src"])
+        update_table(dataset_address[1:-1])
         return "Done"
 
 # Give URL to dataset
