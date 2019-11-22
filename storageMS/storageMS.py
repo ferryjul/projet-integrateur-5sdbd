@@ -130,4 +130,4 @@ api.add_resource(ExecSQLQuery, '/sql-query/<path:sql_query>')
 
 
 if __name__ == '__main__':
-     app.run(port='80', host='192.168.1.5')
+     app.run(port='80', host='0.0.0.0')
