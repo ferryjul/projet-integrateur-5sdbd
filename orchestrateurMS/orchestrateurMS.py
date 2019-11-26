@@ -20,7 +20,7 @@ class storageMS(Resource):
         else:
             return "Storage MicroService has not started yet"
 
-    def put(self, ip):
+    def put(self, req):
         global storage
         if(ip not in storage):
             storage.append(ip)
