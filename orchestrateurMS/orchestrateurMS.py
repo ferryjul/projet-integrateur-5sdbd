@@ -17,6 +17,7 @@ storage = []
 #Class for the real time update of online microservices
 class updateOnline(Thread):
     def __init__(self, ip):
+        Thread.__init__(self)
         self.ip = ip
 
     def run(self):
