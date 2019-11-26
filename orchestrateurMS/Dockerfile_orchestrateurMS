@@ -3,7 +3,6 @@ WORKDIR /
 ADD . /
 RUN echo ‘nameserver 8.8.8.8’ >> /etc/resolve.conf && echo ‘nameserver 8.8.4.4’ >> /etc/resolve.conf’ \
 	&& apt-get update \
-    && apt-get install -y git \
     && pip3 install flask \
     && pip3 install flask_restful \
     && pip3 install flask_jsonpify \
