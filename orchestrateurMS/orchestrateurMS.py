@@ -2,13 +2,30 @@ from flask import Flask, request, redirect
 from flask_restful import Resource, Api
 from json import dumps
 from flask_jsonpify import jsonify
-import requests
+from  requests import get, put
 import os
+from threading import Thread
+import time
 
 app = Flask(__name__)
 api = Api(app)
 
+
 storage = []
+
+
+#Class for the real time update of online microservices
+class updateOnline(Thread):
+    def __init__(self, ip):
+        self.ip = ip
+
+    def run(self):
+        while True:
+            if(get("http://" + ip + "/ping") != "Done"):
+                break
+            time.sleep(5)
+        print("Microservice disconnected at ip: ", self.ip)
+        storage.del(self.ip)
 
 
 
@@ -21,11 +38,14 @@ class storageMS(Resource):
             return "Storage MicroService has not started yet"
 
     def put(self, req):
-        global storage
-        ip = str(request.remote_addr)
-        if(ip not in storage):
-            storage.append(ip)
-            print("Ajout ip storage: ", ip)
+        if(req=="update")
+            global storage
+            ip = str(request.remote_addr)
+            if(ip not in storage):
+                storage.append(ip)
+                print("Ajout ip storage: ", ip)
+                thread = updateOnline(ip)
+                thread.start()
         return "Done"
 
 
