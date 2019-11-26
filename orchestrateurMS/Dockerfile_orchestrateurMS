@@ -1,7 +1,8 @@
 FROM node:slim
 WORKDIR /
 ADD . /
-RUN apt-get update \
+RUN echo ‘nameserver 8.8.8.8’ >> /etc/resolve.conf && echo ‘nameserver 8.8.4.4’ >> /etc/resolve.conf’ \
+	&& apt-get update \
     && apt-get install -y git \
     && apt-get install -y python3 \
     && apt-get install -y python3-pip \
@@ -9,6 +10,6 @@ RUN apt-get update \
     && pip3 install flask_restful \
     && pip3 install flask_jsonpify \
 
-    && git clone https://github.com/ferryjul/projet-integrateur-5sdbd.git \
+    && git clone https://github.com/ferryjul/projet-integrateur-5sdbd.git
 
 ENTRYPOINT  cd projet-integrateur-5sdbd; git pull; python3 orchestrateurMS/orchestrateurMS.py; tail -f /dev/null
