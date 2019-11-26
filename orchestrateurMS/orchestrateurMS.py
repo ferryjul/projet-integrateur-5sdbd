@@ -23,7 +23,8 @@ class storageMS(Resource):
     def put(self, req):
         global storage
         if(ip not in storage):
-            storage.append(ip)
+            storage.append(req)
+            print("Ajout ip storage: ", req)
         return "Done"
 
 
