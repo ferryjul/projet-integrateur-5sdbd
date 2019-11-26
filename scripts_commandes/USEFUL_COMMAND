@@ -1,5 +1,12 @@
 sudo python3 storageMS.py
 
 
-192.168.37.106/add-local-dataset/"/home/user/tests/JC-201509-citibike-tripdata.csv"
+192.168.37.87/add-local-dataset/"/home/user/tests/JC-201509-citibike-tripdata.csv"
+
+
 192.168.37.106/storageMS/sql-query/"SELECT COUNT(*) FROM data"
+
+
+#docker creation
+sudo docker build -t node:orchestrateur -f  Dockerfile_orchestrateurMS .
+sudo docker run -itd --name test -p 80:80 node:orchestrateur sh
