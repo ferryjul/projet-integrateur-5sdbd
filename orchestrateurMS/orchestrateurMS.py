@@ -12,6 +12,7 @@ api = Api(app)
 
 
 storage = []
+processing = []
 
 
 #Class for the real time update of online microservices
@@ -37,9 +38,10 @@ class storageMS(Resource):
             #redirect to ip of storageMS with the input request transfered as well
             return redirect("http://" + str(storage[0]) + "/" + req, code=302)
         else:
-            return "Storage MicroService has not started yet"
+            return "Storage microservice has not started yet"
 
     def put(self, req):
+        print(req)
         if(req=="update"):
             global storage
             ip = str(request.remote_addr)
@@ -50,10 +52,32 @@ class storageMS(Resource):
                 thread.start()
         return "Done"
 
+class processingMS(Resource):
+    def get(self, req):
+        if(len(processing) > 0):
+            #redirect to ip of storageMS with the input request transfered as well
+            return redirect("http://" + str(processing[0]) + "/" + req, code=302)
+        else:
+            return "Processing micromervice has not started yet"
+
+    def put(self, req):
+        print(req)
+        if(req=="update"):
+            global processing
+            ip = str(request.remote_addr)
+            if(ip not in processing):
+                processing.append(ip)
+                print("Ajout ip processing: ", ip)
+                thread = updateOnline(ip)
+                thread.start()
+        return "Done"
 
 
 # Access the storage microservice
 api.add_resource(storageMS, '/storageMS/<path:req>')
+
+# Access the processing microservice
+api.add_resource(processingMS, '/processingMS/<path:req>')
 
 
 
