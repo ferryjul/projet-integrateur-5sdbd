@@ -22,8 +22,13 @@ class Ping(Resource):
     def get(self):
         return "Done"
 
+class Test(Resource):
+    def get(self, data):
+        return "Done"
+
 # Ping method for the orchestrateurMS
 api.add_resource(Ping, '/ping')
+api.add_resource(Test, '/test/<path:data>')
 
 
 if __name__ == '__main__':
