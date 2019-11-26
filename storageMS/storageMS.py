@@ -9,14 +9,11 @@ from requests import get, put
 import os
 import shutil
 import hashlib
-import socket
 
 ip_orchestrateur = "192.168.37.106"
-hostname = socket.gethostname()    
-IPAddr = socket.gethostbyname(hostname)  
 
 #Get online on the orchestrateurMS
-put("http://" + ip_orchestrateur + "/storageMS/" + str(IPAddr))
+put("http://" + ip_orchestrateur + "/storageMS/")
 
 app = Flask(__name__)
 api = Api(app)
