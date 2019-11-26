@@ -121,7 +121,12 @@ class ExecSQLQuery(Resource):
         close_db()
         return jsonify(result)
 
+class Ping(Resource):
+    def get(self):
+        return "Done"
 
+# Ping method for the orchestrateurMS
+api.add_resource(Ping, '/ping')
 
 # Give URL to dataset
 api.add_resource(Dataset, '/add-distant-dataset/<path:dataset_address>')
