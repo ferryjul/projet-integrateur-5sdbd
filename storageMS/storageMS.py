@@ -16,7 +16,7 @@ hostname = socket.gethostname()
 IPAddr = socket.gethostbyname(hostname)  
 
 #Get online on the orchestrateurMS
-put("http://" + ip_orchestrateur + "/storageMS/PUT/" + str(IPAddr))
+put("http://" + ip_orchestrateur + "/storageMS/" + str(IPAddr))
 
 app = Flask(__name__)
 api = Api(app)
