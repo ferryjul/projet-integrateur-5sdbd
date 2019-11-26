@@ -76,6 +76,11 @@ class processingMS(Resource):
                 thread.start()
         return "Done"
 
+class Ping(Resource):
+    def get(self):
+        return "Done"
+
+api.add_resource(Ping, '/ping')
 
 # Access the storage microservice
 api.add_resource(storageMS, '/storageMS/<path:req>')
