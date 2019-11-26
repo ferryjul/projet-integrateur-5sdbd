@@ -23,7 +23,9 @@ class updateOnline(Thread):
     def run(self):
         while True:
             try:
-                if(get("http://" + self.ip + "/ping").content != b'"Done"\n'):
+                z = get("http://" + self.ip + "/ping").content
+                print("z: ", z)
+                if(z != b'"Done"\n'):
                     break
             except:
                 pass
