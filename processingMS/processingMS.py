@@ -28,6 +28,7 @@ class Test(Resource):
 
 # Ping method for the orchestrateurMS
 api.add_resource(Ping, '/ping')
+
 api.add_resource(Test, '/test/<path:data>')
 
 

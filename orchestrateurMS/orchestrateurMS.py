@@ -30,7 +30,11 @@ class updateOnline(Thread):
             except:
                 break
         print("Microservice disconnected at ip: ", self.ip)
-        storage.remove(self.ip)
+        try:
+            storage.remove(self.ip)
+            processing.remove(self.ip)
+        except:
+            pass
 
 class storageMS(Resource):
     def get(self, req):
