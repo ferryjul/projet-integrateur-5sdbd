@@ -28,7 +28,7 @@ class updateOnline(Thread):
                 if(z != b'"Done"\n'):
                     break
             except:
-                pass
+                break
             time.sleep(5)
         print("Microservice disconnected at ip: ", self.ip)
         storage.remove(self.ip)
