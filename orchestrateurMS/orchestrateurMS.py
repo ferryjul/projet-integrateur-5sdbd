@@ -30,7 +30,7 @@ class storageMS(Resource):
 
 # Access the storage microservice
 api.add_resource(storageMS, '/storageMS/GET/<path:rea>')
-api.add_resource(storageMS, '/storageMS/PUT/<path:ip')
+api.add_resource(storageMS, '/storageMS/PUT/<path:ip>')
 
 
 
