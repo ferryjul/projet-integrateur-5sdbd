@@ -25,7 +25,7 @@ class updateOnline(Thread):
                 break
             time.sleep(5)
         print("Microservice disconnected at ip: ", self.ip)
-        storage.del(self.ip)
+        storage.remove(self.ip)
 
 
 
