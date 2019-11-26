@@ -22,9 +22,11 @@ class updateOnline(Thread):
 
     def run(self):
         while True:
-            print(get("http://" + self.ip + "/ping"))
-            if(get("http://" + self.ip + "/ping") != "Done"):
-                break
+            try:
+                if(get("http://" + self.ip + "/ping") != "Done"):
+                    break
+            except:
+                pass
             time.sleep(5)
         print("Microservice disconnected at ip: ", self.ip)
         storage.remove(self.ip)

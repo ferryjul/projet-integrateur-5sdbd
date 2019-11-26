@@ -13,7 +13,10 @@ import hashlib
 ip_orchestrateur = "192.168.37.106"
 
 #Get online on the orchestrateurMS
-put("http://" + ip_orchestrateur + "/storageMS/update")
+try:
+    put("http://" + ip_orchestrateur + "/storageMS/update")
+except:
+    pass
 
 app = Flask(__name__)
 api = Api(app)
