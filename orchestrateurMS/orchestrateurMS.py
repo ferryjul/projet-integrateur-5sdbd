@@ -22,16 +22,14 @@ class updateOnline(Thread):
 
     def run(self):
         while True:
+            time.sleep(10)
             try:
                 if(get("http://" + self.ip + "/ping").content != b'"Done"\n'):
                     break
             except:
                 break
-            time.sleep(5)
         print("Microservice disconnected at ip: ", self.ip)
         storage.remove(self.ip)
-
-
 
 class storageMS(Resource):
     def get(self, req):
