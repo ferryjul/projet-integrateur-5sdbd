@@ -38,7 +38,7 @@ class storageMS(Resource):
             return "Storage MicroService has not started yet"
 
     def put(self, req):
-        if(req=="update")
+        if(req=="update"):
             global storage
             ip = str(request.remote_addr)
             if(ip not in storage):
