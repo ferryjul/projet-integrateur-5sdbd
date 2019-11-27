@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os.path
 import pickle
+import heapq
 
 # Print iterations progress
 def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
@@ -29,24 +30,35 @@ def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, 
 
 #input_file = "JC-201509-citibike-tripdata.csv"
 #input_file = "201306-citibike-tripdata.csv"
-#input_file = "2014-02 - Citi Bike trip data.csv"
-input_file = "201909-citibike-tripdata.csv"
+input_file = "2014-02 - Citi Bike trip data.csv"
+#input_file = "201909-citibike-tripdata.csv"
 image_name = "bigdatasetbackground-bestQ.png"
 useImage = True
-
+nbArrows = 200
 max_radius = 70
 station_dict = dict()
+it_dict = dict()
 
-if os.path.exists("./" + input_file + ".dump"):
+if os.path.exists("./" + input_file + ".dump") and os.path.exists("./" + input_file + "-it.dump") :
     with open(input_file + ".dump", 'rb') as handle:
         station_dict = pickle.load(handle)
     print("Retrieved dictionnary from local directory.")
+    with open(input_file + "-it.dump", 'rb') as handle:
+        it_dict = pickle.load(handle)
+    print("Retrieved it dictionnary from local directory.")
 else:
-    l = len(data.iloc[:,4])
     data = pd.read_csv(input_file) 
+    l = len(data.iloc[:,4])
     # Initial call to print 0% progress
     printProgressBar(0, l, prefix = 'Discovering stations:', suffix = 'Complete', length = 50)
     for index in range(len(data.iloc[:,4])):
+        if not (data.iloc[:,4][index]) in it_dict:
+            it_dict[data.iloc[:,4][index]] = dict()
+            it_dict[data.iloc[:,4][index]][data.iloc[:,8][index]] = 1
+        elif not(data.iloc[:,8][index] in it_dict[data.iloc[:,4][index]]) :
+            it_dict[data.iloc[:,4][index]][data.iloc[:,8][index]] = 1
+        else:
+            it_dict[data.iloc[:,4][index]][data.iloc[:,8][index]] = it_dict[data.iloc[:,4][index]][data.iloc[:,8][index]] + 1
         if not (data.iloc[:,4][index]) in station_dict:
             station_dict[data.iloc[:,4][index]] = [data.iloc[:,3][index], data.iloc[:,5][index], data.iloc[:,6][index], 1, 0]
         else:
@@ -63,8 +75,27 @@ else:
     with open(input_file + ".dump", 'wb') as handle:
         pickle.dump(station_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
     print("Dumped computed dictionnary.")
+    with open(input_file + "-it.dump", 'wb') as handle:
+        pickle.dump(it_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    print("Dumped computed it dictionnary.")
     print("Processed ", l, "lines of data.")
 
+heap = []
+for d in it_dict:
+    for s in it_dict[d]:
+        heapq.heappush(heap, ((-1)*it_dict[d][s],[d,s]))
+i = 0
+while i < nbArrows:    
+    el = heapq.heappop(heap)
+    nb = el[0]
+    bestd = el[1][0]
+    bests = el[1][1]
+    print("orig:", bestd, ", dest:", bests, "traffic = ", nb)
+    plt.arrow(station_dict[bestd][2], station_dict[bestd][1], station_dict[bests][2]-station_dict[bestd][2], station_dict[bests][1]-station_dict[bestd][1], head_width=0.003, head_length=0.003, fc='lightblue', ec='black')
+    i = i + 1
+           
+            
+#print("best trip : ", bestd, " to ", bests, "( ", maxT, " trips)")
 
 #print(stations)
 latitudes = [station_dict[i][2] for i in station_dict]
@@ -96,7 +127,7 @@ plt.axis([-74.03, -73.9,40.65, 40.82])
 plt.scatter(latitudes, longitudes, s=trafficSize, c = colorPoints)
 plt.imshow(im, zorder=0, extent=[-74.03, -73.9,40.65, 40.82])
 print("Found ", len(station_dict), " stations.")
-
+#plt.arrow(station_dict[bestd][2], station_dict[bestd][1], station_dict[bests][2]-station_dict[bestd][2], station_dict[bests][1]-station_dict[bestd][1], head_width=0.003, head_length=0.003, fc='lightblue', ec='black')
 plt.show()
 
 '''
