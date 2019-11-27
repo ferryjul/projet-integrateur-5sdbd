@@ -27,20 +27,24 @@ def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, 
         print()
         
 
-input_file = "JC-201509-citibike-tripdata.csv"
+#input_file = "JC-201509-citibike-tripdata.csv"
 #input_file = "201306-citibike-tripdata.csv"
 #input_file = "2014-02 - Citi Bike trip data.csv"
-data = pd.read_csv(input_file) 
-max_radius = 20
-# Initial call to print 0% progress
-l = len(data.iloc[:,4])
+input_file = "201909-citibike-tripdata.csv"
+image_name = "bigdatasetbackground-bestQ.png"
+useImage = True
 
+max_radius = 70
 station_dict = dict()
+
 if os.path.exists("./" + input_file + ".dump"):
     with open(input_file + ".dump", 'rb') as handle:
         station_dict = pickle.load(handle)
     print("Retrieved dictionnary from local directory.")
 else:
+    l = len(data.iloc[:,4])
+    data = pd.read_csv(input_file) 
+    # Initial call to print 0% progress
     printProgressBar(0, l, prefix = 'Discovering stations:', suffix = 'Complete', length = 50)
     for index in range(len(data.iloc[:,4])):
         if not (data.iloc[:,4][index]) in station_dict:
@@ -59,35 +63,40 @@ else:
     with open(input_file + ".dump", 'wb') as handle:
         pickle.dump(station_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
     print("Dumped computed dictionnary.")
+    print("Processed ", l, "lines of data.")
+
 
 #print(stations)
-latitudes = [station_dict[i][1] for i in station_dict]
-longitudes = [station_dict[i][2] for i in station_dict]
+latitudes = [station_dict[i][2] for i in station_dict]
+longitudes = [station_dict[i][1] for i in station_dict]
 departures = [station_dict[i][3] for i in station_dict]
 arrivals = [station_dict[i][4] for i in station_dict]
 
-traffic = departures
+traffic = departures + arrivals
 trafficSize = []
 colorPoints = []
 max_traffic = max(traffic)
-print("max departures = ", max_traffic)
+print("max traffic = ", max_traffic)
 ij = 0
 for s in station_dict:
     trafficSize.append((traffic[ij]/max_traffic)*max_radius)
-    if 0.8*max_traffic < (traffic[ij]):
+    #plt.annotate(s, (station_dict[s][2], station_dict[s][1]))
+    if 0.9*max_traffic < (traffic[ij]):
         colorPoints.append('red')
+        #plt.annotate(s, (station_dict[s][2], station_dict[s][1]), fontsize=15, va='bottom', color='red')
     else:
         colorPoints.append('blue')
     ij = ij + 1
+if(useImage):  
+    im = plt.imread(image_name)
+    print("loaded background image")
 
-plt.scatter(latitudes, longitudes, s=traffic, c = colorPoints)
-print("Processed ", l, "lines of data.")
+plt.axis([-74.03, -73.9,40.65, 40.82])
+#plt.axis('equal')
+plt.scatter(latitudes, longitudes, s=trafficSize, c = colorPoints)
+plt.imshow(im, zorder=0, extent=[-74.03, -73.9,40.65, 40.82])
 print("Found ", len(station_dict), " stations.")
 
-
-'''# To print names uncomment
-for i, txt in enumerate(station_names):
-    plt.annotate(txt, (latitudes[i], longitudes[i]))'''
 plt.show()
 
 '''
