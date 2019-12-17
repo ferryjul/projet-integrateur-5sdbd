@@ -15,3 +15,9 @@ sudo docker exec -it nom sh
 
 sudo docker push krustylebot/repo:latest
 sudo docker pull krustylebot/repo:latest
+
+
+
+
+sudo docker run -itd --name nom -p 80:80 krustylebot/repo:storageMS sh
+sudo docker run -itd --name nom -p 80:80 krustylebot/repo:orchestrateurMS sh
