@@ -18,6 +18,8 @@ sudo docker pull krustylebot/repo:latest
 
 
 
-
+sudo docker pull krustylebot/repo:storageMS
 sudo docker run -itd --name nom -p 80:80 krustylebot/repo:storageMS sh
+
+sudo docker pull krustylebot/repo:orchestrateurMS
 sudo docker run -itd --name nom -p 80:80 krustylebot/repo:orchestrateurMS sh
