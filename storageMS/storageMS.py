@@ -3,7 +3,7 @@ from flask_restful import Resource, Api
 from sqlalchemy import create_engine
 from json import dumps
 from flask_jsonpify import jsonify
-import MySQLdb
+from cassandra.cluster import Cluster
 import csv
 from requests import get, put
 import os
@@ -18,37 +18,31 @@ try:
 except:
     pass
 
+
 app = Flask(__name__)
 api = Api(app)
 
-host='localhost'
-user='root'
-passwd='useruser'
-db='mydb'
 
-mydb = None
-cursor = None
+db='mydb'
+cluster = Cluster(['192.168.1.14', '192.168.1.4', '192.168.1.15'])
+session = None
 
 def open_db():
-    global host
-    global user
-    global passwd
     global db
-    global mydb
-    global cursor
+    global session
 
     # Open BDD
     print("Opening BDD")
-    mydb = MySQLdb.connect(host, user, passwd, db)
-    cursor = mydb.cursor()
+    session = cluster.connect(db)
+
+
 
 def close_db():
-    global mydb
-    global cursor
+    global session
     # Close BDD
     print("Closing BDD")
-    mydb.commit()
-    cursor.close()
+    session.close()
+    
 
 def update_table(addr):
     open_db()
@@ -68,7 +62,7 @@ def update_table(addr):
             row = [unique_id] + row
 
             try:
-                cursor.execute('INSERT INTO data(trip_id, trip_duration, start_time, stop_time,    start_station_id, \
+                session.execute('INSERT INTO data(trip_id, trip_duration, start_time, stop_time,    start_station_id, \
                 start_station_name, start_station_latitude, start_station_longitude, \
                 end_station_id, end_station_name, end_station_latitude, end_station_longitude, \
                 bike_id, user_type, birth_year, gender )' \
@@ -115,8 +109,7 @@ class ExecSQLQuery(Resource):
         result = None
 
         try:
-                cursor.execute(sql_query[1:-1])
-                result = cursor.fetchall()
+                result = session.execute(sql_query[1:-1])
         except:
             close_db()
             return "Request failed: check you syntax"

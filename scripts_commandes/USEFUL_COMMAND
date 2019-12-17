@@ -1,4 +1,5 @@
 sudo python3 storageMS.py
+echo ‘nameserver 8.8.8.8’ >> /etc/resolve.conf && echo ‘nameserver 8.8.4.4’ >> /etc/resolve.conf’
 
 
 192.168.37.87/add-local-dataset/"/home/user/tests/JC-201509-citibike-tripdata.csv"

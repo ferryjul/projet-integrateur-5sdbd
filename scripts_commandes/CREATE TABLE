@@ -4,23 +4,25 @@ USE mydb;
 
 CREATE TABLE data
 (
-	trip_id VARCHAR(32),
+	trip_id VARCHAR,
 	trip_duration INT,
-	start_time DATETIME,
-	stop_time DATETIME,
+	start_time TIMESTAMP,
+	stop_time TIMESTAMP,
 	start_station_id INT,
-	start_station_name VARCHAR(100),
+	start_station_name VARCHAR,
 	start_station_latitude FLOAT,
 	start_station_longitude FLOAT,
 	end_station_id INT,
-	end_station_name VARCHAR(100),
+	end_station_name VARCHAR,
 	end_station_latitude FLOAT,
 	end_station_longitude FLOAT,
 	bike_id INT,
-	user_type VARCHAR(100),
+	user_type VARCHAR,
 	birth_year INT,
 	gender INT,
-	UNIQUE(trip_id)
+	PRIMARY KEY (trip_id)
 );
 
 SELECT COUNT(*) FROM data;
+
+CREATE TABLE data ( trip_id VARCHAR, trip_duration INT, start_time TIMESTAMP, stop_time TIMESTAMP, start_station_id INT, start_station_name VARCHAR, start_station_latitude FLOAT, start_station_longitude FLOAT, end_station_id INT, end_station_name VARCHAR, end_station_latitude FLOAT, end_station_longitude FLOAT, bike_id INT, user_type VARCHAR, birth_year INT, gender INT, PRIMARY KEY (trip_id) );
