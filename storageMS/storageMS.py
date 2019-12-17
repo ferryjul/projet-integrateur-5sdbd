@@ -64,15 +64,6 @@ def update_table(addr):
             row = [unique_id] + row
 
             try:
-                print('INSERT INTO data(trip_id, trip_duration, start_time, stop_time,    start_station_id, \
-                start_station_name, start_station_latitude, start_station_longitude, \
-                end_station_id, end_station_name, end_station_latitude, end_station_longitude, \
-                bike_id, user_type, birth_year, gender )' \
-                'VALUES(%s, %s, %s, %s, %s, \
-                %s, %s, %s, \
-                %s, %s, %s, %s, \
-                %s, %s, %s, %s)', row)
-                
                 session.execute('INSERT INTO data(trip_id, trip_duration, start_time, stop_time,    start_station_id, \
                 start_station_name, start_station_latitude, start_station_longitude, \
                 end_station_id, end_station_name, end_station_latitude, end_station_longitude, \
