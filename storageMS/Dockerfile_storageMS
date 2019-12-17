@@ -1,6 +1,6 @@
 FROM krustylebot/repo:latest
 WORKDIR /
 ADD . /
-RUN echo ‘nameserver 8.8.8.8’ >> /etc/resolve.conf && echo ‘nameserver 8.8.4.4’ >> /etc/resolve.conf’ \
+RUN echo ‘nameserver 8.8.8.8’ >> /etc/resolve.conf && echo ‘nameserver 8.8.4.4’ >> /etc/resolve.conf’
 
 ENTRYPOINT  cd projet-integrateur-5sdbd; git pull; python3 storageMS/storageMS.py; tail -f /dev/null
