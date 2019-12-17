@@ -23,24 +23,27 @@ api = Api(app)
 
 
 db='mydb'
-cluster = Cluster(['192.168.1.14', '192.168.1.4', '192.168.1.15'])
+cluster = None
 session = None
 
 def open_db():
     global db
     global session
+    global cluster
 
     # Open BDD
     print("Opening BDD")
+    cluster = Cluster(['192.168.1.14', '192.168.1.4', '192.168.1.15'])
     session = cluster.connect(db)
 
 
 
 def close_db():
     global session
+    global cluster
     # Close BDD
     print("Closing BDD")
-    session.close()
+    cluster.shutdown()
     
 
 def update_table(addr):
