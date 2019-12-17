@@ -40,9 +40,11 @@ class updateOnline(Thread):
 class storageMS(Resource):
     def get(self, req):
         global storage_pt
+        global storage
 
         if(len(storage) > 0):
             #redirect to ip of storageMS with the input request transfered as well
+            print("redirect to http://" + str(storage[storage_pt]) + "/" + req)
             return redirect("http://" + str(storage[storage_pt]) + "/" + req, code=302)
             
             storage_pt+=1
