@@ -12,6 +12,7 @@ api = Api(app)
 
 
 storage = []
+storage_pt = 0
 processing = []
 
 
@@ -38,9 +39,15 @@ class updateOnline(Thread):
 
 class storageMS(Resource):
     def get(self, req):
+        global storage_pt
+
         if(len(storage) > 0):
             #redirect to ip of storageMS with the input request transfered as well
-            return redirect("http://" + str(storage[0]) + "/" + req, code=302)
+            return redirect("http://" + str(storage[storage_pt]) + "/" + req, code=302)
+            
+            storage_pt+=1
+            if storage_pt==len(storage):
+                storage_pt = 0
         else:
             return "Storage microservice has not started yet"
 
