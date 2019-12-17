@@ -39,21 +39,22 @@ max_radius = 70
 station_dict = dict()
 it_dict = dict()
 itBis_dict = dict()
-if os.path.exists("./" + input_file + ".dump") and os.path.exists("./" + input_file + "-it.dump") and os.path.exists("./" + input_file + "-itBis.dump"):
+if os.path.exists("./" + input_file + ".dump") and os.path.exists("./" + input_file + "-it.dump") and os.path.exists("./" + input_file + "-itBisb.dump"):
     with open(input_file + ".dump", 'rb') as handle:
         station_dict = pickle.load(handle)
     print("Retrieved dictionnary from local directory.")
     with open(input_file + "-it.dump", 'rb') as handle:
         it_dict = pickle.load(handle)
     print("Retrieved it dictionnary from local directory.")
-    with open(input_file + "-itBis.dump", 'rb') as handle:
+    with open(input_file + "-itBisb.dump", 'rb') as handle:
         itBis_dict = pickle.load(handle)
-    print("Retrieved itBis dictionnary from local directory.")
+    print("Retrieved itBisb dictionnary from local directory.")
 else:
     data = pd.read_csv(input_file) 
     l = len(data.iloc[:,4])
     # Initial call to print 0% progress
     printProgressBar(0, l, prefix = 'Discovering stations:', suffix = 'Complete', length = 50)
+    kk = 0
     for index in range(len(data.iloc[:,4])):
         if not (data.iloc[:,4][index]) in it_dict:
             it_dict[data.iloc[:,4][index]] = dict()
@@ -62,14 +63,12 @@ else:
             it_dict[data.iloc[:,4][index]][data.iloc[:,8][index]] = 1
         else:
             it_dict[data.iloc[:,4][index]][data.iloc[:,8][index]] = it_dict[data.iloc[:,4][index]][data.iloc[:,8][index]] + 1
-        if data.iloc[:,12][index] == "Subscriber":
-            if not (data.iloc[:,4][index]) in itBis_dict:
-                itBis_dict[data.iloc[:,4][index]] = dict()
-                itBis_dict[data.iloc[:,4][index]][data.iloc[:,8][index]] = 1
-            elif not(data.iloc[:,8][index] in itBis_dict[data.iloc[:,4][index]]) :
-                itBis_dict[data.iloc[:,4][index]][data.iloc[:,8][index]] = 1
-            else:
-                itBis_dict[data.iloc[:,4][index]][data.iloc[:,8][index]] = itBis_dict[data.iloc[:,4][index]][data.iloc[:,8][index]] + 1
+        #print("bike id #", data.iloc[:,11][index])
+        if not (data.iloc[:,11][index]) in itBis_dict:
+            itBis_dict[data.iloc[:,11][index]] = []
+            itBis_dict[data.iloc[:,11][index]].append((data.iloc[:,4][index],data.iloc[:,8][index]))
+        else:
+            itBis_dict[data.iloc[:,11][index]].append((data.iloc[:,4][index],data.iloc[:,8][index]))
         if not (data.iloc[:,4][index]) in station_dict:
             station_dict[data.iloc[:,4][index]] = [data.iloc[:,3][index], data.iloc[:,5][index], data.iloc[:,6][index], 1, 0]
         else:
@@ -82,66 +81,21 @@ else:
             currNbDepartures = station_dict[data.iloc[:,8][index]][3]
             currNbArrivals = station_dict[data.iloc[:,8][index]][4]
             station_dict[data.iloc[:,8][index]] = [data.iloc[:,7][index], data.iloc[:,9][index], data.iloc[:,10][index], currNbDepartures, currNbArrivals+1]
-        printProgressBar(index + 1, l, prefix = 'Discovering stations:', suffix = 'Complete', length = 50)
+        if kk%1000 == 0:
+            printProgressBar(index + 1, l, prefix = 'Discovering stations:', suffix = 'Complete', length = 50)
+        kk = kk + 1
     with open(input_file + ".dump", 'wb') as handle:
         pickle.dump(station_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
     print("Dumped computed dictionnary.")
     with open(input_file + "-it.dump", 'wb') as handle:
         pickle.dump(it_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
     print("Dumped computed it dictionnary.")
-    with open(input_file + "-itBis.dump", 'wb') as handle:
+    with open(input_file + "-itBisb.dump", 'wb') as handle:
         pickle.dump(itBis_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
-    print("Dumped computed itBis dictionnary.")
+    print("Dumped computed itBisb dictionnary.")
     print("Processed ", l, "lines of data.")
 
-# n premiers pour touristes
-heap = []
-for d in it_dict:
-    for s in it_dict[d]:
-        if not (d) in itBis_dict:
-            itBis_dict[d] = dict()
-            itBis_dict[d][s] = 0
-        elif not(s in itBis_dict[d]):
-            itBis_dict[d][s] = 0
-        nb = (it_dict[d][s]-itBis_dict[d][s])
-        heapq.heappush(heap, ((-1)*nb,[d,s]))
-i = 0
-#ind = 1/nbArrows
-#s=0
-'''
-while i < nbArrows:    
-    el = heapq.heappop(heap)
-    nb = el[0]
-    bestd = el[1][0]
-    bests = el[1][1]
-    print("orig:", bestd, ", dest:", bests, "traffic = ", nb, "nb subscribers = ", itBis_dict[bestd][bests], ", nb total = ", it_dict[bestd][bests])
-    #s = itBis_dict[bestd][bests]/it_dict[bestd][bests]
-    plt.arrow(station_dict[bestd][2], station_dict[bestd][1], station_dict[bests][2]-station_dict[bestd][2], station_dict[bests][1]-station_dict[bestd][1], head_width=0.003, head_length=0.003, fc='red', ec='black') #'lightblue'
-    #s = s + ind
-    i = i + 1
-'''
-# n premiers pour locaux
-heap = []
-for d in it_dict:
-    for s in it_dict[d]:
-        heapq.heappush(heap, ((-1)*(itBis_dict[d][s]),[d,s]))
-i = 0
-#ind = 1/nbArrows
-#s=0
 
-while i < nbArrows:    
-    el = heapq.heappop(heap)
-    nb = el[0]
-    bestd = el[1][0]
-    bests = el[1][1]
-    print("orig:", bestd, ", dest:", bests, "traffic = ", nb, "nb subscribers = ", itBis_dict[bestd][bests], ", nb total = ", it_dict[bestd][bests])
-    #s = itBis_dict[bestd][bests]/it_dict[bestd][bests]
-    plt.arrow(station_dict[bestd][2], station_dict[bestd][1], station_dict[bests][2]-station_dict[bestd][2], station_dict[bests][1]-station_dict[bestd][1], head_width=0.003, head_length=0.003, fc='green', ec='black') #'lightblue'
-    #s = s + ind
-    i = i + 1
-#print("best trip : ", bestd, " to ", bests, "( ", maxT, " trips)")
-
-#print(stations)
 latitudes = [station_dict[i][2] for i in station_dict]
 longitudes = [station_dict[i][1] for i in station_dict]
 departures = [station_dict[i][3] for i in station_dict]
@@ -151,8 +105,17 @@ traffic = departures + arrivals
 trafficSize = []
 colorPoints = []
 max_traffic = max(traffic)
-print("max traffic = ", max_traffic)
+#print("max traffic = ", max_traffic)
 ij = 0
+#print(itBis_dict)
+heap = []
+for d in itBis_dict:
+    for s in itBis_dict[d]:
+        heapq.heappush(heap, ((-1)*(len(itBis_dict[d])),d))
+aBike = heapq.heappop(heap)[1]
+#ind = 1/nbArrows
+#s=0
+print("Will print for bike #", aBike, "(", len(itBis_dict[aBike]), " trips)")
 for s in station_dict:
     trafficSize.append((traffic[ij]/max_traffic)*max_radius)
     #plt.annotate(s, (station_dict[s][2], station_dict[s][1]))
@@ -162,6 +125,15 @@ for s in station_dict:
     else:
         colorPoints.append('blue')
     ij = ij + 1
+l = len(itBis_dict[aBike])
+i = 0
+for aT in itBis_dict[aBike]:
+    if i < 1*l:
+        i = i + 1
+        bestd = aT[0]
+        bests = aT[1]
+        plt.arrow(station_dict[bestd][2], station_dict[bestd][1], station_dict[bests][2]-station_dict[bestd][2], station_dict[bests][1]-station_dict[bestd][1], head_width=0.003, head_length=0.003, fc='green', ec='black') #'lightblue'
+
 if(useImage):  
     im = plt.imread(image_name)
     print("loaded background image")
@@ -173,32 +145,3 @@ plt.imshow(im, zorder=0, extent=[-74.03, -73.9,40.65, 40.82])
 print("Found ", len(station_dict), " stations.")
 #plt.arrow(station_dict[bestd][2], station_dict[bestd][1], station_dict[bests][2]-station_dict[bestd][2], station_dict[bests][1]-station_dict[bestd][1], head_width=0.003, head_length=0.003, fc='lightblue', ec='black')
 plt.show()
-
-'''
-stations = []
-station_names = []
-for index in range(len(data.iloc[:,4])):
-    if not (data.iloc[:,4][index]) in station_names:
-        station_names.append(data.iloc[:,4][index])
-        stations.append([data.iloc[:,3][index], data.iloc[:,4][index], data.iloc[:,5][index], data.iloc[:,6][index]])
-    if not (data.iloc[:,8][index]) in station_names:
-        station_names.append(data.iloc[:,8][index])
-        stations.append([data.iloc[:,7][index], data.iloc[:,8][index], data.iloc[:,9][index], data.iloc[:,10][index]])
-    printProgressBar(index + 1, l, prefix = 'Discovering stations:', suffix = 'Complete', length = 50)
-#print(stations)
-latitudes = [stations[i][2] for i in range(len(stations))]
-longitudes = [stations[i][3] for i in range(len(stations))]
-traffic = [10, 5, 5, 6, 1]
-max_traffic = max(traffic)
-print("max = ", max_traffic)
-ij = 0
-for s in station_names:
-    traffic.append((traffic[ij]/max_traffic)*max_radius)
-plt.scatter(latitudes, longitudes , s=traffic)
-print("Found ", len(station_names), " stations.")
-
-# To print names uncomment
-for i, txt in enumerate(station_names):
-    plt.annotate(txt, (latitudes[i], longitudes[i]))
-plt.show()
-'''
