@@ -82,7 +82,6 @@ def update_table(addr):
                 %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 
                 rq = rq % tuple(row)
-                print(rq)
 
                 results = session.execute(rq)
                 print(results)
