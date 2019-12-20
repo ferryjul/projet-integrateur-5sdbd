@@ -77,6 +77,18 @@ def update_table(addr):
                 pass
 
             try:
+                row[2] = datetime.datetime.strptime(row[2], '%Y-%m-%d %H:%M:%S')
+                row[3] = datetime.datetime.strptime(row[3], '%Y-%m-%d %H:%M:%S')
+            except:
+                pass
+
+            try:
+                row[2] = datetime.datetime.strptime(row[2], '%m/%d/%Y %H:%M:%S')
+                row[3] = datetime.datetime.strptime(row[3], '%m/%d/%Y %H:%M:%S')
+            except:
+                pass
+
+            try:
                 '''
                 session.execute('INSERT INTO data(trip_id, trip_duration, start_time, stop_time,    start_station_id, \
                 start_station_name, start_station_latitude, start_station_longitude, \
