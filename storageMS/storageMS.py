@@ -89,17 +89,6 @@ def update_table(addr):
                 pass
 
             try:
-                '''
-                session.execute('INSERT INTO data(trip_id, trip_duration, start_time, stop_time,    start_station_id, \
-                start_station_name, start_station_latitude, start_station_longitude, \
-                end_station_id, end_station_name, end_station_latitude, end_station_longitude, \
-                bike_id, user_type, birth_year, gender )' \
-                'VALUES (%s, %s, %s, %s, %s, \
-                %s, %s, %s, \
-                %s, %s, %s, %s, \
-                %s, %s, %s, %s)', row)
-                '''
-
                 rq = "INSERT INTO data(trip_id, trip_duration, start_time, stop_time, start_station_id, \
                 start_station_name, start_station_latitude, start_station_longitude, \
                 end_station_id, end_station_name, end_station_latitude, end_station_longitude, \
@@ -108,10 +97,7 @@ def update_table(addr):
 
                 rq = rq % tuple(row)
 
-                print(rq)
-
                 results = session.execute(rq)
-                print(results)
 
             except:
                 pass;
@@ -158,9 +144,6 @@ class ExecSQLQuery(Resource):
             return "Request failed: check you syntax"
 
         close_db()
-        print("\n\n\n")
-        print(result)
-        print("\n\n\n")
         return jsonify(result)
 
 class Ping(Resource):
