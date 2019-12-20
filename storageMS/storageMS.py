@@ -64,6 +64,9 @@ def update_table(addr):
             unique_id = str(hashlib.md5(str(row).encode()).hexdigest())
             row = [unique_id] + row
 
+            row[2] = datetime.datetime.strptime(row[2], '%Y-%m-%d %H:%M:%S.%f')
+            row[3] = datetime.datetime.strptime(row[3], '%Y-%m-%d %H:%M:%S.%f')
+
             try:
                 '''
                 session.execute('INSERT INTO data(trip_id, trip_duration, start_time, stop_time,    start_station_id, \
@@ -75,9 +78,6 @@ def update_table(addr):
                 %s, %s, %s, %s, \
                 %s, %s, %s, %s)', row)
                 '''
-
-                row[2] = datetime.datetime.strptime(row[2], '%Y-%m-%d %H:%M:%S.%f')
-                row[3] = datetime.datetime.strptime(row[3], '%Y-%m-%d %H:%M:%S.%f')
 
                 rq = "INSERT INTO data(trip_id, trip_duration, start_time, stop_time, start_station_id, \
                 start_station_name, start_station_latitude, start_station_longitude, \
