@@ -43,13 +43,16 @@ class storageMS(Resource):
         global storage
 
         if(len(storage) > 0):
+            tmp = storage_pt
             #redirect to ip of storageMS with the input request transfered as well
-            print("redirect to http://" + str(storage[storage_pt]) + "/" + req)
-            return redirect("http://" + str(storage[storage_pt]) + "/" + req, code=302)
-            
+            print("redirect to http://" + str(storage[tmp]) + "/" + req)
+
+            #Change the pointer to the next ip, or the first one if we reached the end of the list
             storage_pt+=1
             if storage_pt==len(storage):
                 storage_pt = 0
+
+            return redirect("http://" + str(storage[tmp]) + "/" + req, code=302)
         else:
             return "Storage microservice has not started yet"
 
