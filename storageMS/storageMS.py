@@ -91,7 +91,6 @@ def update_table(addr):
 
                 rq = rq % tuple(row)
 
-                print(rq)
 
                 results = session.execute(rq)
 
