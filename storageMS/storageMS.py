@@ -67,6 +67,8 @@ def update_table(addr):
             try:
                 row[2] = row[2].split('.')[0]
                 row[3] = row[3].split('.')[0]
+            except:
+                pass
 
             try:
                 row[2] = datetime.datetime.strptime(row[2], '%m/%d/%Y %H:%M:%S')
