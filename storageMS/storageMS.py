@@ -134,12 +134,13 @@ class ExecSQLQuery(Resource):
         result = None
 
         try:
-                result = session.execute(sql_query[1:-1])
+                result = list(session.execute(sql_query[1:-1]))
         except:
             close_db()
             return "Request failed: check you syntax"
 
         close_db()
+        print(result)
         result = json.dumps(result)
         return jsonify(result)
 
