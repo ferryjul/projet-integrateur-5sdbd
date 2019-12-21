@@ -65,14 +65,12 @@ def update_table(addr):
             row = [unique_id] + row
 
             try:
-                row[2] = datetime.datetime.strptime(row[2], '%m/%d/%Y %H:%M:%S')
-                row[3] = datetime.datetime.strptime(row[3], '%m/%d/%Y %H:%M:%S')
-            except:
-                pass
+                row[2] = row[2].split('.')[0]
+                row[3] = row[3].split('.')[0]
 
             try:
-                row[2] = datetime.datetime.strptime(row[2], '%m/%d/%Y %H:%M:%S.%f')
-                row[3] = datetime.datetime.strptime(row[3], '%m/%d/%Y %H:%M:%S.%f')
+                row[2] = datetime.datetime.strptime(row[2], '%m/%d/%Y %H:%M:%S')
+                row[3] = datetime.datetime.strptime(row[3], '%m/%d/%Y %H:%M:%S')
             except:
                 pass
 
