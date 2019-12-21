@@ -1,6 +1,6 @@
 from flask import Flask, request
 from flask_restful import Resource, Api
-from json import dumps
+import json
 from flask_jsonpify import jsonify
 from cassandra.cluster import Cluster
 import csv
@@ -134,12 +134,13 @@ class ExecSQLQuery(Resource):
         result = None
 
         try:
-                result = list(session.execute(sql_query[1:-1]))
+                result = session.execute(sql_query[1:-1])
         except:
             close_db()
             return "Request failed: check you syntax"
 
         close_db()
+        result = json.dumps(result)
         return jsonify(result)
 
 class Ping(Resource):
