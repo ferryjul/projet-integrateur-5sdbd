@@ -134,7 +134,8 @@ class ExecSQLQuery(Resource):
         result = None
 
         try:
-                result = list(session.execute(sql_query[1:-1]))
+                print(sql_query[1:-1])
+                result = session.execute(sql_query[1:-1])
         except:
             close_db()
             return "Request failed: check you syntax"
