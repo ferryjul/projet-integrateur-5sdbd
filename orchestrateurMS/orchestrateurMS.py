@@ -92,7 +92,13 @@ class Ping(Resource):
     def get(self):
         return "Done"
 
+class Res(Resource):
+    def get(self):
+        return storage
+
 api.add_resource(Ping, '/ping')
+
+api.add_resource(Res, '/ressources')
 
 # Access the storage microservice
 api.add_resource(storageMS, '/storageMS/<path:req>')

@@ -65,8 +65,8 @@ def update_table(addr):
             row = [unique_id] + row
 
             try:
-                row[2] = datetime.datetime.strptime(row[2], '%Y-%m-%d %H:%M:%S.%f')
-                row[3] = datetime.datetime.strptime(row[3], '%Y-%m-%d %H:%M:%S.%f')
+                row[2] = datetime.datetime.strptime(row[2], '%m/%d/%Y %H:%M:%S')
+                row[3] = datetime.datetime.strptime(row[3], '%m/%d/%Y %H:%M:%S')
             except:
                 pass
 
@@ -83,8 +83,8 @@ def update_table(addr):
                 pass
 
             try:
-                row[2] = datetime.datetime.strptime(row[2], '%m/%d/%Y %H:%M:%S')
-                row[3] = datetime.datetime.strptime(row[3], '%m/%d/%Y %H:%M:%S')
+                row[2] = datetime.datetime.strptime(row[2], '%Y-%m-%d %H:%M:%S.%f')
+                row[3] = datetime.datetime.strptime(row[3], '%Y-%m-%d %H:%M:%S.%f')
             except:
                 pass
 
