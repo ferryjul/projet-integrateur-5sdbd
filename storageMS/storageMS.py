@@ -149,9 +149,9 @@ class ExecSQLQuery(Resource):
         close_db()
         H = []
         for w in results:
-            a = json.dumps(w.split("'"))
-            b = json.JSONDecoder().decode(a)
-            H.append(json.loads(b[0]))
+            a = str(w).split("'")[1]
+            H.append(json.JSONDecoder().decode(a))
+            
         return jsonify(H)
 
 class Ping(Resource):
