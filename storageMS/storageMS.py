@@ -145,6 +145,7 @@ class ExecSQLQuery(Resource):
             return "Request failed: check you syntax"
 
         close_db()
+        print(result[0])
         return jsonify(result)
 
 class Ping(Resource):
