@@ -4,6 +4,7 @@ import json
 from flask_jsonpify import jsonify
 from cassandra.cluster import Cluster
 from cassandra.query import SimpleStatement
+from cassandra.query import dict_factory
 import csv
 from requests import get, put
 import os
@@ -136,6 +137,7 @@ class ExecSQLQuery(Resource):
         try:
                 print(sql_query[1:-1])
                 statement = SimpleStatement(sql_query[1:-1], fetch_size=100)
+                session.row_factory = dict_factory
                 result = session.execute(statement)
 
         except:
@@ -143,13 +145,7 @@ class ExecSQLQuery(Resource):
             return "Request failed: check you syntax"
 
         close_db()
-        H = []
-        
-        for w in result:
-            a = str(w).split("'")[1]
-            H.append(json.loads(a))
-
-        return jsonify(H)
+        return jsonify(result)
 
 class Ping(Resource):
     def get(self):
