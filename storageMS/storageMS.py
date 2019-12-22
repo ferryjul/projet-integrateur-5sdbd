@@ -136,7 +136,7 @@ class ExecSQLQuery(Resource):
 
         try:
                 print(sql_query[1:-1])
-                statement = SimpleStatement(sql_query[1:-1], fetch_size=100)
+                statement = SimpleStatement(sql_query[1:-1], fetch_size=None)
                 session.row_factory = dict_factory
                 result = session.execute(statement)
 
