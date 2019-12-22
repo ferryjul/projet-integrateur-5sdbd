@@ -136,17 +136,20 @@ class ExecSQLQuery(Resource):
 
         try:
                 print(sql_query[1:-1])
-                statement = SimpleStatement(sql_query[1:-1], fetch_size=None)
+                statement = SimpleStatement(sql_query[1:-1], fetch_size=100)
                 session.row_factory = dict_factory
                 result = session.execute(statement)
+
+                while(result.has_more_pages):
+                    result = result + session.execute(statement, paging_state = result.paging_state)
 
         except:
             close_db()
             return "Request failed: check you syntax"
 
         close_db()
-        print(result[0])
-        return jsonify(result)
+
+        return result
 
 class Ping(Resource):
     def get(self):
