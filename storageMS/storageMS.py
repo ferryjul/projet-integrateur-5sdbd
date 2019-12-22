@@ -137,18 +137,24 @@ class ExecSQLQuery(Resource):
                 print(sql_query[1:-1])
                 statement = SimpleStatement(sql_query[1:-1], fetch_size=100)
                 result = session.execute(statement)
-                results = list(result)
+                G = []
+                G.append(result)
 
                 while(result.has_more_pages):
                     result = session.execute(statement, paging_state = result.paging_state)
-                    results.extend(list(result))
+                    G.append(result)
         except:
             close_db()
             return "Request failed: check you syntax"
 
         close_db()
-        print(len(results))
-        return jsonify(results)
+        H = []
+        for result in G:
+            for w in result:
+                a = str(w).split("'")[1]
+                H.append(json.loads(a))
+
+        return jsonify(H)
 
 class Ping(Resource):
     def get(self):
