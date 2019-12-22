@@ -148,6 +148,7 @@ class ExecSQLQuery(Resource):
 
         close_db()
         print(len(results))
+        results = json.dumps(results)
         return jsonify(results)
 
 class Ping(Resource):
