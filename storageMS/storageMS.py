@@ -140,7 +140,6 @@ class ExecSQLQuery(Resource):
                 results = list(result)
 
                 while(result.has_more_pages):
-                    print("adding 100 more rows")
                     result = session.execute(statement, paging_state = result.paging_state)
                     results.extend(list(result))
         except:
@@ -148,8 +147,8 @@ class ExecSQLQuery(Resource):
             return "Request failed: check you syntax"
 
         close_db()
-        print(len(results))
-        results = json.dumps(results)
+        print(results[0])
+        results = json.loads(results)
         return jsonify(results)
 
 class Ping(Resource):
