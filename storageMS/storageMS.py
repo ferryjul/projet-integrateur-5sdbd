@@ -4,7 +4,6 @@ import json
 from flask_jsonpify import jsonify
 from cassandra.cluster import Cluster
 from cassandra.query import SimpleStatement
-from cassandra.query import dict_factory
 import csv
 from requests import get, put
 import os
@@ -137,19 +136,19 @@ class ExecSQLQuery(Resource):
         try:
                 print(sql_query[1:-1])
                 statement = SimpleStatement(sql_query[1:-1], fetch_size=100)
-                session.row_factory = dict_factory
                 result = session.execute(statement)
+                results = list(result)
 
                 while(result.has_more_pages):
-                    result = result + session.execute(statement, paging_state = result.paging_state)
-
+                    result = session.execute(statement, paging_state = result.paging_state)
+                    results.extend(list(result))
         except:
             close_db()
             return "Request failed: check you syntax"
 
         close_db()
-
-        return result
+        print(len(results))
+        return results
 
 class Ping(Resource):
     def get(self):
