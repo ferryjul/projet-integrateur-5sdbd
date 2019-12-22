@@ -137,20 +137,23 @@ class ExecSQLQuery(Resource):
                 print(sql_query[1:-1])
                 statement = SimpleStatement(sql_query[1:-1], fetch_size=100)
                 result = session.execute(statement)
-                results = list(result)
+                results = []
+                results.append(result)
 
                 while(result.has_more_pages):
                     result = session.execute(statement, paging_state = result.paging_state)
-                    results.extend(list(result))
+                    results.append(result)
         except:
             close_db()
             return "Request failed: check you syntax"
 
         close_db()
-        print(results[0])
+
         G = []
-        for w in result:
-            G.append(json.dumps(json.JSONDecoder().decode(w)))
+        for result in results:
+            for w in result:
+                G.append(json.loads(json.JSONDecoder().decode(json.dumps(w)))[0])
+
         print(G[0])
         results = json.dumps(G)
         return jsonify(results)
