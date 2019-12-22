@@ -152,7 +152,9 @@ class ExecSQLQuery(Resource):
         G = []
         for result in results:
             for w in result:
-                G.append(json.loads(json.JSONDecoder().decode(json.dumps(w)))[0])
+                a = json.dumps(w)
+                b = json.JSONDecoder().decode(a)
+                G.append(json.loads(b[0]))
 
         print(G[0])
         results = json.dumps(G)
