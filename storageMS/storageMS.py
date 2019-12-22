@@ -140,6 +140,7 @@ class ExecSQLQuery(Resource):
                 results = list(result)
 
                 while(result.has_more_pages):
+                    print("adding 100 more rows")
                     result = session.execute(statement, paging_state = result.paging_state)
                     results.extend(list(result))
         except:
