@@ -147,16 +147,7 @@ class ExecSQLQuery(Resource):
             return "Request failed: check you syntax"
 
         close_db()
-        print(results[0])
-        G = []
-
-        for w in result:
-            a = json.dumps(w)
-            b = json.JSONDecoder().decode(a)
-            G.append(json.loads(b[0]))
-
-        print(G[0])
-        results = json.dumps(G)
+        print(len(results))
         return jsonify(results)
 
 class Ping(Resource):
