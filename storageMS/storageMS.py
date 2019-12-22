@@ -137,24 +137,23 @@ class ExecSQLQuery(Resource):
                 print(sql_query[1:-1])
                 statement = SimpleStatement(sql_query[1:-1], fetch_size=100)
                 result = session.execute(statement)
-                results = []
-                results.append(result)
+                results = list(result)
 
                 while(result.has_more_pages):
                     result = session.execute(statement, paging_state = result.paging_state)
-                    results.append(result)
+                    results.extend(list(result))
         except:
             close_db()
             return "Request failed: check you syntax"
 
         close_db()
-
+        print(results[0])
         G = []
-        for result in results:
-            for w in result:
-                a = json.dumps(w)
-                b = json.JSONDecoder().decode(a)
-                G.append(json.loads(b[0]))
+
+        for w in result:
+            a = json.dumps(w)
+            b = json.JSONDecoder().decode(a)
+            G.append(json.loads(b[0]))
 
         print(G[0])
         results = json.dumps(G)
@@ -164,8 +163,20 @@ class Ping(Resource):
     def get(self):
         return "Done"
 
+class Update_orchestrateur(Resource):
+    def get(self):
+        try:
+            put("http://" + ip_orchestrateur + "/storageMS/update")
+        except:
+            pass
+        return "Done"
+
+
 # Ping method for the orchestrateurMS
 api.add_resource(Ping, '/ping')
+
+# Update method in case the orchestrateur has to reboot, to avoid the need to reboot each MS
+api.add_resource(Update_orchestrateur, '/reboot')
 
 # Give URL to dataset
 api.add_resource(Dataset, '/add-distant-dataset/<path:dataset_address>')
