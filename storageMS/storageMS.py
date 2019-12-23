@@ -135,12 +135,12 @@ class ExecSQLQuery(Resource):
 
         try:
                 print(sql_query[1:-1])
-                statement = SimpleStatement(sql_query[1:-1], fetch_size=50)
+                statement = SimpleStatement(sql_query[1:-1], fetch_size=100)
                 result = session.execute(statement)
                 results = result.current_rows
 
                 while(result.has_more_pages):
-                    print("adding more pages")
+                    #print("adding more pages")
                     result = session.execute(statement, paging_state = result.paging_state)
                     results.extend(result.current_rows)
         except:
