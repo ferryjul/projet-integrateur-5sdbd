@@ -150,7 +150,7 @@ class ExecSQLQuery(Resource):
 
         H = []
         start = time.time()
-        print("nb element", len(results))
+        print("nb element", len(result))
 
         for w in result:
             a = str(w).split("'")[1]
@@ -158,7 +158,7 @@ class ExecSQLQuery(Resource):
 
         stop = time.time()
         print("parsing time: ", stop-start)
-        
+
         return jsonify(H)
 
 class Ping(Resource):
