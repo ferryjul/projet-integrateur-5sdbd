@@ -135,13 +135,14 @@ class ExecSQLQuery(Resource):
 
         try:
                 print(sql_query[1:-1])
-                statement = SimpleStatement(sql_query[1:-1], fetch_size=100)
+                statement = SimpleStatement(sql_query[1:-1], fetch_size=50)
                 result = session.execute(statement)
-                results = list(result)
+                results = result.current_rows
 
                 while(result.has_more_pages):
+                    print("adding more pages")
                     result = session.execute(statement, paging_state = result.paging_state)
-                    results.extend(list(result))
+                    results.extend(result.current_rows)
         except:
             close_db()
             return "Request failed: check you syntax"
@@ -151,7 +152,7 @@ class ExecSQLQuery(Resource):
         for w in results:
             a = str(w).split("'")[1]
             H.append(json.JSONDecoder().decode(a))
-            
+
         return jsonify(H)
 
 class Ping(Resource):
