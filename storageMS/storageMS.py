@@ -10,6 +10,7 @@ import os
 import shutil
 import hashlib
 import datetime
+import time
 
 ip_orchestrateur = "192.168.37.106"
 
@@ -138,14 +139,15 @@ class ExecSQLQuery(Resource):
                 statement = SimpleStatement(sql_query[1:-1], fetch_size=100)
                 result = session.execute(statement)
                 results = result.current_rows
+                time.sleep(5)
 
                 while(result.has_more_pages):
                     #print("adding more pages")
                     result = session.execute(statement, paging_state = result.paging_state)
                     results.extend(result.current_rows)
-        except:
+        except Exception as e:
             close_db()
-            return "Request failed: check you syntax"
+            return e
 
         close_db()
         H = []
