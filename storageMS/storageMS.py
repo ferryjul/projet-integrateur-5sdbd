@@ -36,7 +36,7 @@ def open_db():
 
     # Open BDD
     print("Opening BDD")
-    cluster = Cluster(['192.168.1.14', '192.168.1.4', '192.168.1.15'])
+    cluster = Cluster(['192.168.1.14', '192.168.1.4', '192.168.1.15'], idle_heartbeat_interval=2)
     session = cluster.connect(db)
 
 
