@@ -138,12 +138,13 @@ class ExecSQLQuery(Resource):
                 print(sql_query[1:-1])
                 statement = SimpleStatement(sql_query[1:-1], fetch_size=100)
                 result = session.execute(statement)
-                results = result.current_rows
                 time.sleep(5)
+                results = result.current_rows
 
                 while(result.has_more_pages):
-                    #print("adding more pages")
+                    print("adding more pages")
                     result = session.execute(statement, paging_state = result.paging_state)
+                    time.sleep(5)
                     results.extend(result.current_rows)
         except Exception as e:
             close_db()
