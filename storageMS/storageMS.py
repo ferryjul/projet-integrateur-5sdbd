@@ -36,7 +36,7 @@ def open_db():
 
     # Open BDD
     print("Opening BDD")
-    cluster = Cluster(['192.168.1.14', '192.168.1.4', '192.168.1.15'], idle_heartbeat_interval=2)
+    cluster = Cluster(['192.168.1.14', '192.168.1.4', '192.168.1.15'])
     session = cluster.connect(db)
 
 
@@ -137,9 +137,9 @@ class ExecSQLQuery(Resource):
         try:
                 print(sql_query[1:-1])
                 statement = SimpleStatement(sql_query[1:-1], fetch_size=100)
-                result = session.execute_async(statement)
-                results = result.result()
-
+                result = session.execute(statement)
+                results = list(result)
+                
         except Exception as e:
             close_db()
             return e
@@ -147,15 +147,13 @@ class ExecSQLQuery(Resource):
 
         print("query time: ", stop-start)
 
-        time.sleep(10)
-
         close_db()
         H = []
         start = time.time()
+        print("nb element", len(results))
         for w in results:
             a = str(w).split("'")[1]
             H.append(json.JSONDecoder().decode(a))
-        print("nb element", len(H))
         stop = time.time()
         print("parsing time: ", stop-start)
         return jsonify(H)
