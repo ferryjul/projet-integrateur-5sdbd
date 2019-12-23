@@ -149,6 +149,7 @@ class ExecSQLQuery(Resource):
 
         close_db()
         H = []
+        print(len(results))
         for w in results:
             a = str(w).split("'")[1]
             H.append(json.JSONDecoder().decode(a))
