@@ -133,7 +133,7 @@ class ExecSQLQuery(Resource):
         #Execute the request on the table
         open_db()
         result = None
-
+        start = time.time()
         try:
                 print(sql_query[1:-1])
                 statement = SimpleStatement(sql_query[1:-1], fetch_size=100)
@@ -147,14 +147,19 @@ class ExecSQLQuery(Resource):
         except Exception as e:
             close_db()
             return e
+        stop = time.time()
+
+        print("query time: ", stop-start)
 
         close_db()
         H = []
-        print(len(results))
+        start = time.time()
+        print("nb element", len(results))
         for w in results:
             a = str(w).split("'")[1]
             H.append(json.JSONDecoder().decode(a))
-
+        stop = time.time()
+        print("parsing time: ", stop-start)
         return jsonify(H)
 
 class Ping(Resource):
