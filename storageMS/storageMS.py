@@ -150,11 +150,13 @@ class ExecSQLQuery(Resource):
 
         H = []
         start = time.time()
-        print("nb element", len(result))
+
 
         for w in result:
             a = str(w).split("'")[1]
             H.append(json.JSONDecoder().decode(a))
+
+        print("nb element", len(H))
 
         stop = time.time()
         print("parsing time: ", stop-start)
