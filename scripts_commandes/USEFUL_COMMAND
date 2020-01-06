@@ -30,3 +30,5 @@ sudo docker run -itd --name nom -p 80:80 krustylebot/repo:orchestrateurMS sh
 INSERT INTO data(trip_id, trip_duration, start_time, stop_time, start_station_id, start_station_name, start_station_latitude, start_station_longitude, end_station_id, end_station_name, end_station_latitude, end_station_longitude, bike_id, user_type, birth_year, gender ) VALUES ('abcde',61,'2015-09-21 14:53:16','2015-09-21 14:54:17',3185,'City Hall',40.7177325,-74.043845,3185,'City Hall',40.7177325,-74.043845,24722,'Subscriber',1975,1);
 
 "SELECT json * FROM data WHERE start_time >= '2018-08-01 05:00:00' AND  start_time <= '2018-8-3 5:00:00' ALLOW FILTERING"
+
+ cqlsh 192.168.1.14 -e "COPY mydb.data (trip_id, trip_duration, start_time, stop_time, start_station_id, start_station_name, start_station_latitude, start_station_longitude, end_station_id, end_station_name, end_station_latitude, end_station_longitude, bike_id, user_type, birth_year, gender) FROM 'container-data/CSV_data/2014-03 - Citi Bike trip datafinal.csv' WITH DELIMITER=',' AND HEADER=TRUE"
