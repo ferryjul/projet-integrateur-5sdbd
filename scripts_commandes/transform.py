@@ -7,12 +7,14 @@ basedir = '/home/user/CSV_data/'
 dirname = '/home/user/CSV_data/final/'
 
 for filename in os.listdir(basedir):
-	if(filename not in os.listdir(dirname)):
-
-		with open(filename, mode='w') as employee_file:
+	if(filename = "final"):
+		pass
+	elif(filename not in os.listdir(dirname)):
+		print("start: " + filename)
+		with open(dirname + filename, mode='w') as employee_file:
 			csv_writer = csv.writer(employee_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
-			with open(dirname + filename) as csv_file:
+			with open(basedir + filename) as csv_file:
 				csv_reader = csv.reader(csv_file, delimiter=',')
 				line_count = 0
 				for row in csv_reader:
@@ -30,4 +32,4 @@ for filename in os.listdir(basedir):
 		print(line_count)
 	else:
 		print("Already done")
-		#os.system("rm " + basedir + filename)
+		os.system("rm '" + basedir + filename + "'")
