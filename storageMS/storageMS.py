@@ -145,7 +145,8 @@ class ExecSQLQuery(Resource):
                 
         except Exception as e:
             close_db()
-            return "Ta mere la tchoin" + str(e)
+            print(e)
+            return e
         stop = time.time()
 
         print("query time: ", stop-start)
