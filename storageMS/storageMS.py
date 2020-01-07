@@ -137,12 +137,15 @@ class ExecSQLQuery(Resource):
         try:
                 print(sql_query[1:-1])
                 statement = SimpleStatement(sql_query[1:-1], fetch_size=100)
+                print("statement done")
                 result = session.execute(statement)
+                print("execute done")
                 results = list(result)
+                print("list done")
                 
         except Exception as e:
             close_db()
-            return e
+            return "Ta mere la tchoin"
         stop = time.time()
 
         print("query time: ", stop-start)
