@@ -154,11 +154,13 @@ class ExecSQLQuery(Resource):
         H = []
         start = time.time()
         print("nb element", len(results))
+        print("iteration start")
         for w in results:
             a = str(w).split("'")[1]
             H.append(json.JSONDecoder().decode(a))
         stop = time.time()
         print("parsing time: ", stop-start)
+        print("start jsonify")
         return jsonify(H)
 
 class Ping(Resource):
