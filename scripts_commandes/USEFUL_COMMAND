@@ -28,7 +28,7 @@ sudo docker pull krustylebot/repo:latest
 
 #EXEMPLE: si l'image docker a deja ete cree et push sur le dockerhub, il suffit de faire un pull puis de lancer le docker
 sudo docker pull krustylebot/repo:storageMS
-sudo docker run -itd --name nom -p 80:80 -v ~/container-data:/data krustylebot/repo:storageMS sh
+sudo docker run -itd --name nom -p 80:80 krustylebot/repo:storageMS sh
 
 #EXEMPLE: si l'image docker a deja ete cree et push sur le dockerhub, il suffit de faire un pull puis de lancer le docker
 sudo docker pull krustylebot/repo:orchestrateurMS
