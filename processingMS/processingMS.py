@@ -30,7 +30,7 @@ class StationsStatusJSONQuery(Resource):
 	# Make and return a realtime stations status json indexed by station_id
 	@staticmethod
 	def get_correct_stations_status_json():
-		r = requests.get(url='https://gbfs.citibikenyc.com/gbfs/en/station_status.json')
+		r = get(url='https://gbfs.citibikenyc.com/gbfs/en/station_status.json')
 		original_stations_status_json = r.json()
 
 		# Instantiate and build a stations status dict indexed by station_id
