@@ -2,31 +2,41 @@ sudo python3 storageMS.py
 echo ‘nameserver 8.8.8.8’ >> /etc/resolve.conf && echo ‘nameserver 8.8.4.4’ >> /etc/resolve.conf’
 
 
-192.168.37.87/add-local-dataset/"/home/user/tests/JC-201509-citibike-tripdata.csv"
-
-
 192.168.37.106/storageMS/sql-query/"SELECT COUNT(*) FROM data"
+192.168.37.106/processingMS/...
+192.168.37.106/ping
 
-
-#docker creation
+###################################################################################################################
+#Creation d'un docker
+#ETAPE 1: on build l'image a partir d'un dockerfile qui va indiquer quel programme lancer quand le docker se lance
 sudo docker build -t projet:orchestrateur -f  Dockerfile_orchestrateurMS .
-sudo docker run -itd --name nom -p 80:80 -v ~/container-data:/data krustylebot/repo:latest sh
+
+#ETAPE 2: On run le docker avec un nat por 80 vers port 80 dans le docker
+sudo docker run -itd --name nom -p 80:80 projet:orchestrateur sh
+
+#ETAPE 3: On peut ouvrir un shell dans le docker pour kill le service et le relancer manuellement pour voir l'execution
 sudo docker exec -it nom sh
+
+#ETAPE 4: On peut restart un docker apres un push sur le git. Rien besoin de faire en plus, au moment du
+#restart un pull du git est fait et le service va se relancer tout seul
 sudo docker restart nom
 
+#On peut push et pull une image docker vers un dockerhub (comme github) mais il faut je soit connecté a dockerhub sur la machine
 sudo docker push krustylebot/repo:latest
 sudo docker pull krustylebot/repo:latest
 
 
-
+#EXEMPLE: si l'image docker a deja ete cree et push sur le dockerhub, il suffit de faire un pull puis de lancer le docker
 sudo docker pull krustylebot/repo:storageMS
 sudo docker run -itd --name nom -p 80:80 -v ~/container-data:/data krustylebot/repo:storageMS sh
 
-
+#EXEMPLE: si l'image docker a deja ete cree et push sur le dockerhub, il suffit de faire un pull puis de lancer le docker
 sudo docker pull krustylebot/repo:orchestrateurMS
 sudo docker run -itd --name nom -p 80:80 krustylebot/repo:orchestrateurMS sh
+###################################################################################################################
 
 
+#Autres commande fouilli pour s'en souvenir
 INSERT INTO data(trip_id, trip_duration, start_time, stop_time, start_station_id, start_station_name, start_station_latitude, start_station_longitude, end_station_id, end_station_name, end_station_latitude, end_station_longitude, bike_id, user_type, birth_year, gender ) VALUES ('abcde',61,'2015-09-21 14:53:16','2015-09-21 14:54:17',3185,'City Hall',40.7177325,-74.043845,3185,'City Hall',40.7177325,-74.043845,24722,'Subscriber',1975,1);
 
 "SELECT json * FROM data WHERE start_time >= '2018-08-01 05:00:00' AND  start_time <= '2018-8-3 5:00:00' ALLOW FILTERING"
