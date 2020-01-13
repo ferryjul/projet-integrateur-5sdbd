@@ -156,7 +156,7 @@ class StationsFillingRateJSONQuery(Resource):
 		return jsonify(stations_new)
 
 	def get(self, timeAhead):
-		return StationsStatusJSONQuery.get_correct_stations_numBikes_json(timeAhead)
+		return StationsFillingRateJSONQuery.get_correct_stations_numBikes_json(timeAhead)
 
 class Update_orchestrateur(Resource):
     def get(self):
