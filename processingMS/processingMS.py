@@ -77,12 +77,14 @@ class StationsFillingRateJSONQuery(Resource):
 			req = "http://192.168.37.106/storageMS/sql-query/\"SELECT json * FROM data WHERE start_time >= '%s' AND  start_time <= '%s' ALLOW FILTERING\"" %(dateWanted, dateWanted2)
 			res = get(req)
 			if(res.status_code != 200):
-				print(res.text)
+				print("error message : ", res.text)
+				return res.text
 		except ConnectionError:
 			return "failed to connect to Cassandra"
 		
 		print(len(res.json()), " elements in dict.")
-
+		if "ERROR CASSANDRA" in res.text():
+			return "Erreur de Cassandra -> elle a pas les données"
 		# Compute past flows
 		station_dict = dict()
 
