@@ -157,6 +157,7 @@ class StationsFillingRateJSONQuery(Resource):
 				flowsBest = [nbBase]
 				for i in range(0, timeAhead-1):
 					nbBase = nbBase + station_dict[stationName][i][1] - station_dict[stationName][i][0]
+					print("[station %d] Plus %d bikes, Moins %d bikes" %(stationName,station_dict[stationName][i][1],station_dict[stationName][i][0]))
 					flowsBest.append(nbBase)
 				stations_new[stationName] = flowsBest
 		return jsonify(stations_new)
