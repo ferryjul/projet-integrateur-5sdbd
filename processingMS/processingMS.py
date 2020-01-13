@@ -152,12 +152,13 @@ class StationsFillingRateJSONQuery(Resource):
 		stations_new = dict()
 		# Computing previsional number of bikes
 		for stationName in station_dict:
-			nbBase = actualRates["stations"][str(stationName)]["num_bikes_available"]
-			flowsBest = [nbBase]
-			for i in range(0, timeAhead-1):
-				nbBase = nbBase + station_dict[stationName][i][1] - station_dict[stationName][i][0]
-				flowsBest.append(nbBase)
-			stations_new[stationName] = flowsBest
+			if str(stationName) in actualRates["stations"]:
+				nbBase = int(actualRates["stations"][str(stationName)]["num_bikes_available"])
+				flowsBest = [nbBase]
+				for i in range(0, timeAhead-1):
+					nbBase = nbBase + station_dict[stationName][i][1] - station_dict[stationName][i][0]
+					flowsBest.append(nbBase)
+				stations_new[stationName] = flowsBest
 		return jsonify(stations_new)
 
 	def get(self, timeAhead):
