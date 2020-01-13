@@ -71,10 +71,10 @@ class StationsFillingRateJSONQuery(Resource):
 		year = year - 1
 		dateWanted2 = str(year) + "-" + dateObj2
 		print("Wanted interval = ", dateWanted, " to ", dateWanted2)
-
+		req = "http://192.168.37.106/storageMS/sql-query/\"SELECT json * FROM data WHERE start_time >= '%s' AND  start_time <= '%s' ALLOW FILTERING\"" %(dateWanted, dateWanted2)
+		print("requesting to Cassandra :", req)
 		# Request data to Cassandra
 		try:
-			req = "http://192.168.37.106/storageMS/sql-query/\"SELECT json * FROM data WHERE start_time >= '%s' AND  start_time <= '%s' ALLOW FILTERING\"" %(dateWanted, dateWanted2)
 			res = get(req)
 			if(res.status_code != 200):
 				print("error message : ", res.text)
