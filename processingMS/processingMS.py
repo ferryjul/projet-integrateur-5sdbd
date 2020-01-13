@@ -56,7 +56,7 @@ class StationsFillingRateJSONQuery(Resource):
 
 	@staticmethod
 	def get_correct_stations_numBikes_json(timeAhead):
-		actualRates = get(url='localhost:80/stations_current_status.json')
+		actualRates = get(url='http://localhost:80/stations_current_status.json')
 		
 		# Computing target dates
 		now = datetime.now()# + timedelta(hours = 4464) # pour taper dans les csv chargés !
