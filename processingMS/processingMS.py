@@ -59,13 +59,23 @@ class StationsFillingRateJSONQuery(Resource):
 		
 		return jsonify(actualRates)
 
-	def get(self):
+	def get(self, timeAhead):
 		return StationsStatusJSONQuery.get_correct_stations_status_json()
 
+class Update_orchestrateur(Resource):
+    def get(self):
+        try:
+            put("http://" + ip_orchestrateur + "/storageMS/update")
+        except:
+            pass
+        return "Done"
 
 # Give GET request to get a corrected version of the realtime station status json
 api.add_resource(StationsStatusJSONQuery, '/stations_current_status.json')
 api.add_resource(StationsFillingRateJSONQuery, '/predict/<int:timeAhead>')
+
+# Update method in case the orchestrateur has to reboot, to avoid the need to reboot each MS
+api.add_resource(Update_orchestrateur, '/reboot')
 
 # Ping method for the orchestrateurMS
 api.add_resource(Ping, '/ping')
