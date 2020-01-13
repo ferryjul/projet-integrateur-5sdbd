@@ -70,6 +70,7 @@ class StationsFillingRateJSONQuery(Resource):
 		year = int(nowPlus10.strftime("%Y"))
 		year = year - 1
 		dateWanted2 = str(year) + "-" + dateObj2
+		print("Wanted interval = ", dateWanted, " to ", dateWanted2)
 
 		# Request data to Cassandra
 		try:
@@ -79,7 +80,7 @@ class StationsFillingRateJSONQuery(Resource):
 				print(res.text)
 		except ConnectionError:
 			return "failed to connect to Cassandra"
-			
+		
 		print(len(res.json()), " elements in dict.")
 
 		# Compute past flows
