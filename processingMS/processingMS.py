@@ -79,7 +79,9 @@ class StationsFillingRateJSONQuery(Resource):
 				print(res.text)
 		except ConnectionError:
 			return "failed to connect to Cassandra"
-		
+			
+		print(len(res.json()), " elements in dict.")
+
 		# Compute past flows
 		station_dict = dict()
 
