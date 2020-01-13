@@ -147,7 +147,7 @@ class ExecSQLQuery(Resource):
             close_db()
             print("ERROR CASSANDRA")
             print(e)
-            return "ERROR CASSANDRA DE SES MORTS " + str(e)
+            return "ERROR CASSANDRA -> " + str(e)
         stop = time.time()
 
         print("query time: ", stop-start)
