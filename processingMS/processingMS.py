@@ -50,8 +50,22 @@ class StationsStatusJSONQuery(Resource):
 	def get(self):
 		return StationsStatusJSONQuery.get_correct_stations_status_json()
 
+
+class StationsFillingRateJSONQuery(Resource):
+	# Make and return a realtime stations status json indexed by station_id
+	@staticmethod
+	def get_correct_stations_status_json():
+		actualRates = get(url='localhost:80/stations_current_status.json')
+		
+		return jsonify(actualRates)
+
+	def get(self):
+		return StationsStatusJSONQuery.get_correct_stations_status_json()
+
+
 # Give GET request to get a corrected version of the realtime station status json
 api.add_resource(StationsStatusJSONQuery, '/stations_current_status.json')
+api.add_resource(StationsFillingRateJSONQuery, '/predict/<int:timeAhead>')
 
 # Ping method for the orchestrateurMS
 api.add_resource(Ping, '/ping')
