@@ -62,6 +62,7 @@ class StationsFillingRateJSONQuery(Resource):
 		now = datetime.now()# + timedelta(hours = 4464) # pour taper dans les csv chargés !
 		dateObj =  now.strftime('%m-%d %H:%M:%S')#%Y-
 		year = int(now.strftime("%Y"))
+		HOUR = int(now.strftime("%H"))
 		year = year - 1
 		dateWanted = str(year) + "-" + dateObj
 
@@ -155,10 +156,17 @@ class StationsFillingRateJSONQuery(Resource):
 			if str(stationName) in actualRates["stations"]:
 				nbBase = int(actualRates["stations"][str(stationName)]["num_bikes_available"])
 				flowsBest = [nbBase]
-				for i in range(0, timeAhead-1):
+				cnt = 0
+				i = HOUR
+				while cnt < timeAhead:
+				#for i in range(HOUR, timeAhead-1):
+					if i >= 24:
+						i = 0
 					nbBase = nbBase + station_dict[stationName][i][1] - station_dict[stationName][i][0]
-					print("[station %d] Plus %d bikes, Moins %d bikes" %(stationName,station_dict[stationName][i][1],station_dict[stationName][i][0]))
+					#print("[station %d] Plus %d bikes, Moins %d bikes" %(stationName,station_dict[stationName][i][1],station_dict[stationName][i][0]))
 					flowsBest.append(nbBase)
+					i = i + 1
+					cnt = cnt + 1
 				stations_new[stationName] = flowsBest
 		return jsonify(stations_new)
 
