@@ -162,7 +162,7 @@ class ExecSQLQuery(Resource):
         except Exception as e:
             close_db()
             print_logs("ERROR CASSANDRA")
-            return "ERROR CASSANDRA -> " + str(e)
+            return "ERROR CASSANDRA -> " + str(e), 500
         stop = time.time()
 
         print_logs("query time: " + str(stop-start))
@@ -184,7 +184,7 @@ class ExecSQLQuery(Resource):
 
 class Ping(Resource):
     def get(self):
-        return "Done",500
+        return "Done"
 
 class Logs(Resource):
     def get(self):
