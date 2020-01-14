@@ -54,7 +54,7 @@ class storageMS(Resource):
 
             return redirect("http://" + str(storage[tmp]) + "/" + req, code=302)
         else:
-            return "Storage microservice has not started yet"
+            return "Storage microservice has not started yet", 404
 
     def put(self, req):
         print(req)
@@ -74,7 +74,7 @@ class processingMS(Resource):
             #redirect to ip of storageMS with the input request transfered as well
             return redirect("http://" + str(processing[0]) + "/" + req, code=302)
         else:
-            return "Processing micromervice has not started yet"
+            return "Processing micromervice has not started yet", 404
 
     def put(self, req):
         print(req)
