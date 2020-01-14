@@ -142,6 +142,7 @@ class ExecSQLQuery(Resource):
         open_db()
         result = None
 
+        '''
         start = time.time()
         try:
                 print(sql_query[1:-1])
@@ -174,11 +175,8 @@ class ExecSQLQuery(Resource):
         print_logs("parsing time: " + str(stop-start))
         print_logs("start jsonify")
         return jsonify(H)
-
-
-
-
         '''
+
         start = time.time()
 
         try:
@@ -214,7 +212,7 @@ class ExecSQLQuery(Resource):
         print_logs("parsing time: " + str(stop-start))
         print_logs("start jsonify")
         return jsonify(H)
-        '''
+        
 
 class Ping(Resource):
     def get(self):
