@@ -105,9 +105,12 @@ def update_table(addr):
     close_db()
 
 def print_logs(log):
-    global logs
-    print(log)
-    logs = logs + [log]
+    try:
+        global logs
+        print(log)
+        logs = logs + [log]
+    except Exception as e:
+        logs = logs + ["erreur print_logs"]
 
 
 
