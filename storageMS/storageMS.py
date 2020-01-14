@@ -196,7 +196,7 @@ class Update_orchestrateur(Resource):
             put("http://" + ip_orchestrateur + "/storageMS/update")
         except:
             pass
-        return "Done"
+        return "Done",500
 
 
 # Ping method for the orchestrateurMS
