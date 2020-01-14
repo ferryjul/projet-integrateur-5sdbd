@@ -145,40 +145,6 @@ class ExecSQLQuery(Resource):
         open_db()
         result = None
 
-        '''
-        start = time.time()
-        try:
-                print(sql_query[1:-1])
-                statement = SimpleStatement(sql_query[1:-1], fetch_size=100)
-                print_logs("statement done")
-                results = session.execute(statement)
-                print_logs("execute done")
-      
-        except Exception as e:
-            close_db()
-            print_logs("ERROR CASSANDRA")
-            print_logs(e)
-            return "ERROR CASSANDRA -> " + str(e)
-        stop = time.time()
-
-        print_logs("query time: " + str(stop-start))
-
-        close_db()
-        H = []
-        start = time.time()
-        print_logs("nb element: " + str(len(results)))
-        print_logs("iteration start")
-
-        print_logs(str(results[0]).split("'")[1])
-
-        for w in results:
-            a = str(w).split("'")[1]
-            H.append(json.JSONDecoder().decode(a))
-        stop = time.time()
-        print_logs("parsing time: " + str(stop-start))
-        print_logs("start jsonify")
-        return jsonify(H)
-        '''
 
         start = time.time()
 
