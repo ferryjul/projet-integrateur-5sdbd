@@ -177,8 +177,8 @@ class DamagedBikesJSONQuery(Resource):
 
 	@staticmethod
 	def get_correct_damaged_json(date_1, date_2):
-		date1 = datetime.datetime.strptime(date_1, '%Y-%m-%d %H:%M:%S')
-		date2 = datetime.datetime.strptime(date_2, '%Y-%m-%d %H:%M:%S')
+		date1 = datetime.strptime(date_1, '%Y-%m-%d %H:%M:%S')
+		date2 = datetime.strptime(date_2, '%Y-%m-%d %H:%M:%S')
 		print("Requesting data")
 		# Interrogation de Cassandra
 		try:
