@@ -184,7 +184,7 @@ class ExecSQLQuery(Resource):
 
 class Ping(Resource):
     def get(self):
-        return "Done"
+        return "Done",500
 
 class Logs(Resource):
     def get(self):
@@ -196,7 +196,7 @@ class Update_orchestrateur(Resource):
             put("http://" + ip_orchestrateur + "/storageMS/update")
         except:
             pass
-        return "Done",500
+        return "Done"
 
 
 # Ping method for the orchestrateurMS
