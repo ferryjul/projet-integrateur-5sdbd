@@ -177,8 +177,8 @@ class DamagedBikesJSONQuery(Resource):
 
 	@staticmethod
 	def get_correct_damaged_json(date_1, date_2):
-		date1 = datetime.datetime.strptime(date_1, '%Y-%m-%d %H:%M:%S')
-		date2 = datetime.datetime.strptime(date_2, '%Y-%m-%d %H:%M:%S')
+		date1 = datetime.strptime(date_1, '%Y-%m-%d %H:%M:%S')
+		date2 = datetime.strptime(date_2, '%Y-%m-%d %H:%M:%S')
 		print("Requesting data")
 		# Interrogation de Cassandra
 		try:
@@ -243,6 +243,8 @@ class DamagedBikesJSONQuery(Resource):
 		locationsDamaged = dict()
 		print("Detected ", len(brokens), " bikes that might be damaged : ")
 		for bikeB in brokens:
+			if not bikeB in locationsDamaged:
+				locationsDamaged[bikeB] = dict()
 			locationsDamaged[bikeB]["Station"] = (itBis_dict[bikeB][len(itBis_dict[bikeB]) - 1][1])
 			locationsDamaged[bikeB]["Trips"] = len(itBis_dict[bikeB])
 			#print("Bike #", bikeB, "(Last seen at station : ", itBis_dict[bikeB][len(itBis_dict[bikeB]) - 1][1], ")")# -> ", len(itBis_dict[bikeB]), " trips.")
