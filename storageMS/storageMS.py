@@ -14,7 +14,7 @@ import time
 
 ip_orchestrateur = "192.168.37.106"
 
-logs = ""
+logs = []
 
 #Get online on the orchestrateurMS
 try:
@@ -107,7 +107,7 @@ def update_table(addr):
 def print_logs(log):
     global logs
     print(log)
-    logs = logs + "\n" + log
+    logs = logs + [log]
 
 
 
@@ -166,7 +166,7 @@ class ExecSQLQuery(Resource):
         print_logs("iteration start")
 
         print_logs(str(results[0]).split("'")[1])
-        
+
         for w in results:
             a = str(w).split("'")[1]
             H.append(json.JSONDecoder().decode(a))
