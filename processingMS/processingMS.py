@@ -243,6 +243,8 @@ class DamagedBikesJSONQuery(Resource):
 		locationsDamaged = dict()
 		print("Detected ", len(brokens), " bikes that might be damaged : ")
 		for bikeB in brokens:
+			if not bikeB in locationsDamaged:
+				locationsDamaged[bikeB] = dict()
 			locationsDamaged[bikeB]["Station"] = (itBis_dict[bikeB][len(itBis_dict[bikeB]) - 1][1])
 			locationsDamaged[bikeB]["Trips"] = len(itBis_dict[bikeB])
 			#print("Bike #", bikeB, "(Last seen at station : ", itBis_dict[bikeB][len(itBis_dict[bikeB]) - 1][1], ")")# -> ", len(itBis_dict[bikeB]), " trips.")
