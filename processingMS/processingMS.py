@@ -6,6 +6,7 @@ import csv
 from requests import get, put
 import os
 from datetime import datetime, timedelta
+import heapq
 
 ip_orchestrateur = "192.168.37.106"
 
@@ -50,7 +51,6 @@ class StationsStatusJSONQuery(Resource):
 
 	def get(self):
 		return StationsStatusJSONQuery.get_correct_stations_status_json()
-
 
 class StationsFillingRateJSONQuery(Resource):
 
@@ -173,6 +173,90 @@ class StationsFillingRateJSONQuery(Resource):
 	def get(self, timeAhead):
 		return StationsFillingRateJSONQuery.get_correct_stations_numBikes_json(timeAhead)
 
+class DamagedBikesJSONQuery(Resource):
+
+	@staticmethod
+	def get_correct_damaged_json(date_1, date_2):
+		date1 = datetime.datetime.strptime(date_1, '%Y-%m-%d %H:%M:%S')
+		date2 = datetime.datetime.strptime(date_2, '%Y-%m-%d %H:%M:%S')
+		print("Requesting data")
+		# Interrogation de Cassandra
+		try:
+			res = get("http://192.168.37.106/storageMS/sql-query/\"SELECT json * FROM data WHERE start_time >= '%s' AND  start_time <= '%s' ALLOW FILTERING\"" %(date1, date2))
+			print("status = ", res.status_code)
+		except ConnectionError:
+			print("failed to connect to Cassandra")
+
+		print("Got data")
+		print(len(res.json()), " elements in dict.")
+
+		brokenThreshold = 1
+		station_dict = dict()
+		it_dict = dict()
+		itBis_dict = dict()
+		data = res.json()
+		l = len(data)
+		index = 0
+		for line in data:
+			if not (line["start_station_id"]) in it_dict:
+				it_dict[line["start_station_id"]] = dict()
+				it_dict[line["start_station_id"]][line["end_station_id"]] = 1
+			elif not(line["end_station_id"] in it_dict[line["start_station_id"]]) :
+				it_dict[line["start_station_id"]][line["end_station_id"]] = 1
+			else:
+				it_dict[line["start_station_id"]][line["end_station_id"]] = it_dict[line["start_station_id"]][line["end_station_id"]] + 1
+			if not (line["bike_id"]) in itBis_dict:
+				itBis_dict[line["bike_id"]] = []
+				itBis_dict[line["bike_id"]].append((line["start_station_id"],line["end_station_id"]))
+			else:
+				itBis_dict[line["bike_id"]].append((line["start_station_id"],line["end_station_id"]))
+			if not (line["start_station_id"]) in station_dict:
+				station_dict[line["start_station_id"]] = [line["start_station_id"], line["end_station_latitude"], line["end_station_longitude"], 1, 0]
+			else:
+				currNbDepartures = station_dict[line["start_station_id"]][3]
+				currNbArrivals = station_dict[line["start_station_id"]][4]
+				station_dict[line["start_station_id"]] = [line["start_station_id"], line["end_station_latitude"], line["end_station_longitude"], currNbDepartures+1, currNbArrivals]
+			if not (line["end_station_id"]) in station_dict:
+				station_dict[line["end_station_id"]] = [line["end_station_id"], line["end_station_latitude"], line["end_station_longitude"], 0, 1]
+			else:
+				currNbDepartures = station_dict[line["end_station_id"]][3]
+				currNbArrivals = station_dict[line["end_station_id"]][4]
+				station_dict[line["end_station_id"]] = [line["end_station_id"], line["end_station_latitude"], line["end_station_longitude"], currNbDepartures, currNbArrivals+1]
+			index = index + 1
+
+		heap = []
+		for d in itBis_dict:
+			for s in itBis_dict[d]:
+				heapq.heappush(heap, ((+1)*(len(itBis_dict[d])),d))
+
+		ok = False
+		brokens = []
+		while(not ok):
+			b = heapq.heappop(heap)
+			nb = b[0]
+			aBike = b[1]
+			if(nb > brokenThreshold):
+				ok = True
+			else:
+				brokens.append(aBike)
+
+		locationsDamaged = dict()
+		print("Detected ", len(brokens), " bikes that might be damaged : ")
+		for bikeB in brokens:
+			locationsDamaged[bikeB]["Station"] = (itBis_dict[bikeB][len(itBis_dict[bikeB]) - 1][1])
+			locationsDamaged[bikeB]["Trips"] = len(itBis_dict[bikeB])
+			#print("Bike #", bikeB, "(Last seen at station : ", itBis_dict[bikeB][len(itBis_dict[bikeB]) - 1][1], ")")# -> ", len(itBis_dict[bikeB]), " trips.")
+		
+		return jsonify(locationsDamaged)
+
+	def get(self, data):
+		data = data.replace("\"", "")
+		tabData = data.split("$")
+		date1 = tabData[0]
+		date2 = tabData[1]
+		return DamagedBikesJSONQuery.get_correct_damaged_json(date1, date2)
+
+
 class Update_orchestrateur(Resource):
     def get(self):
         try:
@@ -183,7 +267,14 @@ class Update_orchestrateur(Resource):
 
 # Give GET request to get a corrected version of the realtime station status json
 api.add_resource(StationsStatusJSONQuery, '/stations_current_status.json')
+
+# In : Integer timeAhead
+# Out : JSON : for each station, previsional filling rates for timeAhead intervals
 api.add_resource(StationsFillingRateJSONQuery, '/predict/<int:timeAhead>')
+
+# In : "date1$date2" where date is at format YYYY-MM-DD HH:mm:ss
+# Out : JSON : list of damaged bikes along with their station location id
+api.add_resource(DamagedBikesJSONQuery, '/damaged/<path:data>')
 
 # Update method in case the orchestrateur has to reboot, to avoid the need to reboot each MS
 api.add_resource(Update_orchestrateur, '/reboot')
