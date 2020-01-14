@@ -194,7 +194,7 @@ class ExecSQLQuery(Resource):
             close_db()
             print_logs("ERROR CASSANDRA")
             print_logs(e)
-            return "ERROR CASSANDRA -> " + str(e)
+            return "ERROR CASSANDRA -> "
         stop = time.time()
 
         print_logs("query time: " + str(stop-start))
