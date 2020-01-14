@@ -14,6 +14,8 @@ import time
 
 ip_orchestrateur = "192.168.37.106"
 
+logs = ""
+
 #Get online on the orchestrateurMS
 try:
     put("http://" + ip_orchestrateur + "/storageMS/update")
@@ -36,7 +38,7 @@ def open_db():
 
     # Open BDD
     print("Opening BDD")
-    cluster = Cluster(['192.168.1.14', '192.168.1.4', '192.168.1.15'])
+    print_logs("Opening BDD")
     cluster = Cluster(['192.168.1.14'])
     session = cluster.connect(db)
 
@@ -47,6 +49,7 @@ def close_db():
     global cluster
     # Close BDD
     print("Closing BDD")
+    print_logs("Closing BDD")
     cluster.shutdown()
     
 
@@ -101,6 +104,10 @@ def update_table(addr):
                 pass;
     close_db()
 
+def print_logs(log):
+    global logs
+    print(log)
+    logs = logs + "\n" + log
 
 
 
@@ -134,41 +141,88 @@ class ExecSQLQuery(Resource):
         #Execute the request on the table
         open_db()
         result = None
+
         start = time.time()
         try:
                 print(sql_query[1:-1])
                 statement = SimpleStatement(sql_query[1:-1], fetch_size=100)
-                print("statement done")
-                result = session.execute(statement)
-                print("execute done")
-                results = list(result)
-                print("list done")
-                
+                print_logs("statement done")
+                results = session.execute(statement)
+                print_logs("execute done")
+      
         except Exception as e:
             close_db()
-            print("ERROR CASSANDRA")
-            print(e)
+            print_logs("ERROR CASSANDRA")
+            print_logs(e)
             return "ERROR CASSANDRA -> " + str(e)
         stop = time.time()
 
-        print("query time: ", stop-start)
+        print_logs("query time: " + str(stop-start))
 
         close_db()
         H = []
         start = time.time()
-        print("nb element", len(results))
-        print("iteration start")
+        print_logs("nb element: " + str(len(results)))
+        print_logs("iteration start")
+
+        print_logs(str(results[0]).split("'")[1])
+        
         for w in results:
             a = str(w).split("'")[1]
             H.append(json.JSONDecoder().decode(a))
         stop = time.time()
-        print("parsing time: ", stop-start)
-        print("start jsonify")
+        print_logs("parsing time: " + str(stop-start))
+        print_logs("start jsonify")
         return jsonify(H)
+
+
+
+
+        '''
+        start = time.time()
+
+        try:
+                print(sql_query[1:-1])
+                statement = SimpleStatement(sql_query[1:-1], fetch_size=100)
+                print_logs("statement done")
+                result = session.execute(statement)
+                print_logs("execute done")
+
+                results = list(result)
+                print_logs("list done")
+
+                
+        except Exception as e:
+            close_db()
+            print_logs("ERROR CASSANDRA")
+            print_logs(e)
+            return "ERROR CASSANDRA -> " + str(e)
+        stop = time.time()
+
+        print_logs("query time: " + str(stop-start))
+
+        close_db()
+        H = []
+        start = time.time()
+        print_logs("nb element: " + str(len(results)))
+        print_logs("iteration start")
+
+        for w in results:
+            a = str(w).split("'")[1]
+            H.append(json.JSONDecoder().decode(a))
+        stop = time.time()
+        print_logs("parsing time: " + str(stop-start))
+        print_logs("start jsonify")
+        return jsonify(H)
+        '''
 
 class Ping(Resource):
     def get(self):
         return "Done"
+
+class Logs(Resource):
+    def get(self):
+        return logs
 
 class Update_orchestrateur(Resource):
     def get(self):
@@ -181,6 +235,8 @@ class Update_orchestrateur(Resource):
 
 # Ping method for the orchestrateurMS
 api.add_resource(Ping, '/ping')
+
+api.add_resource(Logs, '/logs')
 
 # Update method in case the orchestrateur has to reboot, to avoid the need to reboot each MS
 api.add_resource(Update_orchestrateur, '/reboot')
